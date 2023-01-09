@@ -1,0 +1,12 @@
+.HomePage{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.chooseCard{
+    margin-left: 2px;
+    margin-right: 2px;
+    width: '18rem'
+}
