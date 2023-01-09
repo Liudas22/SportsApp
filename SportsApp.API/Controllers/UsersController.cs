@@ -4,6 +4,7 @@ using SportsApp.Core.Services.UserService;
 using SportsApp.Domain.Models;
 using SportsApp.Domain.Models.DTO;
 using SportsApp.Infrastructure.Data;
+using SportsApp.Infrastructure.Repositories;
 
 namespace SportsApp.Controllers
 {
@@ -20,9 +21,15 @@ namespace SportsApp.Controllers
         [Route("register")]
         public async Task<IActionResult> Register(UserDTO userDto)
         {
+            if (await userService.GetUserByName(userDto.Name) != null)
+            {
+                return Conflict();
+            }
+            if (await userService.GetUserByEmail(userDto.Email) != null)
+            {
+                return Unauthorized();
+            }
             var addedUser = await userService.Post(userDto);
-
-            if (addedUser == null) return Unauthorized();
 
             return Ok(addedUser);
         }
@@ -38,11 +45,15 @@ namespace SportsApp.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(UserDTO userDto)
         {
-            var addedUser = await userService.Login(userDto);
+            if (await userService.GetUserByEmail(userDto.Email) == null)
+            {
+                return NotFound();
+            }
+            var loginUser = await userService.Login(userDto);
 
-            if (addedUser == null) return Unauthorized();
+            if (loginUser == null) return Unauthorized();
 
-            return Ok(addedUser);
+            return Ok(loginUser);
         }
     }
 }

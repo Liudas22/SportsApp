@@ -5,6 +5,7 @@ using SportsApp.Domain.Models;
 using SportsApp.Domain.Models.DTO;
 using SportsApp.Infrastructure.Repositories;
 using SportsApp.Infrastructure.Data;
+using Microsoft.Identity.Client;
 
 namespace SportsApp.Core.Services.UserService
 {
@@ -17,13 +18,6 @@ namespace SportsApp.Core.Services.UserService
         }
         public async Task<User> Post(UserDTO userDto)
         {
-            var existUser = await _userRepository.GetUserByEmail(userDto.Email);
-
-            if (existUser != null)
-            {
-                return null;
-            }
-
             User user = new User()
             {
                 Id = Guid.NewGuid(),
@@ -41,23 +35,26 @@ namespace SportsApp.Core.Services.UserService
             throw new NotImplementedException();
         }
 
-        public async Task<User> Login(UserDTO userDto)
+        public async Task<UserDTO> Login(UserDTO userDto)
         {
-            var existingUser = await _userRepository.GetUserByEmail(userDto.Email);
-
-            /*if (existingUser == null)
-            {
-                //return NotFound();
-                return null;
-            }*/
+            User existingUser = await GetUserByEmail(userDto.Email);
 
             if (userDto.Password != existingUser.Password)
             {
                 return null;
-                //return Conflict();
             }
-
-            return existingUser;
+            else
+            {
+                return userDto;
+            }
+        }
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _userRepository.GetUserByEmail(email);
+        }
+        public async Task<User> GetUserByName(string name)
+        {
+            return await _userRepository.GetUserByName(name);
         }
     }
 }

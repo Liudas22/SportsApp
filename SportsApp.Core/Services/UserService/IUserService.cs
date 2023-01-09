@@ -8,6 +8,6 @@ namespace SportsApp.Core.Services.UserService
     {
         Task<User> Post(UserDTO userDto);
         Task<IActionResult> ChangePassword(string email, string password);
-        Task<User> Login(UserDTO userDto);
+        Task<UserDTO> Login(UserDTO userDto);
     }
 }

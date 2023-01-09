@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SportsApp.Domain.Models;
+using SportsApp.Domain.Models.DTO;
 using SportsApp.Infrastructure.Data;
 
 namespace SportsApp.Infrastructure.Repositories

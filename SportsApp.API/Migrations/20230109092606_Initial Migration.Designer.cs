@@ -12,7 +12,7 @@ using SportsApp.Infrastructure.Data;
 namespace SportsApp.API.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20230108202348_Initial Migration")]
+    [Migration("20230109092606_Initial Migration")]
     partial class InitialMigration
     {
         /// <inheritdoc />

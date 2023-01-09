@@ -6,9 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddDbContext<DatabaseContext>(opt =>
+builder.Services.AddDbContext<DatabaseContext>(options =>
 {
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("SportsApp.API"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("SportsApp.API"));
 });
 
 builder.Services.AddEndpointsApiExplorer();

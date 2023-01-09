@@ -54,6 +54,15 @@ function RegisterPage() {
       })
       navigate("/");
     }
+    if (response.status === 409) {
+      toast({
+        title: "Toks naudotojo vardas jau naudojamas",
+        status: "error",
+        duration: 5000,
+        position:"top-right",
+        isClosable: true,
+      })
+    }
     if (response.status === 401) {
       toast({
         title: "Toks el. paštas jau naudojamas",
@@ -63,19 +72,8 @@ function RegisterPage() {
         isClosable: true,
       })
     }
-    // if (response.status === 409){
-    //   toast({
-    //     title: "Toks el. paštas jau naudojamas",
-    //     status: "error",
-    //     duration: 5000,
-    //     position:"top-right",
-    //     isClosable: true,
-    //   });
-    // }
-
     const data = await response.json();
     console.log(data)
-
   }
 
   return(
@@ -88,9 +86,7 @@ function RegisterPage() {
                 <div className="mb-3 mt-md-4">
                   <p className=" mb-5">Registracija</p>
                   <div className="mb-3">
-                    <Form 
-                    onSubmit = {(e) => submitHandler(e)}
-                    >
+                    <Form onSubmit = {(e) => submitHandler(e)} >
                       <Form.Group className="mb-3" controlId="formBasicText">
                         <Form.Label className="text-center">
                           Naudotojo vardas

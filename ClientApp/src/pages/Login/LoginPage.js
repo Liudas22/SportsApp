@@ -48,15 +48,15 @@ function LoginPage() {
       })
       navigate("/home");
     }
-    // if (response.status === 404) {
-    //   toast({
-    //     title: "Toks naudotojas neegzistuoja",
-    //     status: "error",
-    //     duration: 5000,
-    //     position:"top-right",
-    //     isClosable: true,
-    //   })
-    // }
+    if (response.status === 404) {
+      toast({
+        title: "Toks naudotojas neegzistuoja",
+        status: "error",
+        duration: 5000,
+        position:"top-right",
+        isClosable: true,
+      })
+    }
     if (response.status === 401){
       toast({
         title: "Neteisingas slaptažodis",
