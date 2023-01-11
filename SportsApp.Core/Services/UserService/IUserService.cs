@@ -6,7 +6,7 @@ namespace SportsApp.Core.Services.UserService
 {
     public interface IUserService
     {
-        Task<User> Post(UserDTO userDto);
+        Task<UserDTO> Post(UserDTO userDto);
         Task<IActionResult> ChangePassword(string email, string password);
         Task<UserDTO> Login(UserDTO userDto);
     }

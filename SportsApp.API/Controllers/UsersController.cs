@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SportsApp.Core.Services.UserService;
 using SportsApp.Domain.Models;
@@ -12,10 +13,16 @@ namespace SportsApp.Controllers
     [Route("api")]
     public class UsersController : Controller
     {
-        private readonly UserService userService; 
+        private readonly UserService userService;
+        private MapperConfiguration config;
+        private Mapper _mapper;
         public UsersController(DatabaseContext dbContext)
         {
             userService = new UserService(dbContext);
+            config = new MapperConfiguration(cfg =>
+                cfg.CreateMap<User, UserDTO>()
+            );
+            _mapper = new Mapper(config);
         }
         [HttpPost]
         [Route("register")]
@@ -44,6 +51,8 @@ namespace SportsApp.Controllers
             var loginUser = await userService.Login(userDto);
 
             if (loginUser == null) return Unauthorized();
+
+            loginUser.IsLoggedIn = true;
 
             return Ok(loginUser);
         }

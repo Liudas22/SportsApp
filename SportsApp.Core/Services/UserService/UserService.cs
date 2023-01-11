@@ -6,17 +6,24 @@ using SportsApp.Domain.Models.DTO;
 using SportsApp.Infrastructure.Repositories;
 using SportsApp.Infrastructure.Data;
 using Microsoft.Identity.Client;
+using AutoMapper;
 
 namespace SportsApp.Core.Services.UserService
 {
     public class UserService : IUserService
     {
         private readonly UserRepository _userRepository;
+        private MapperConfiguration config;
+        private Mapper _mapper;
         public UserService(DatabaseContext dbContext)
         {
             _userRepository = new UserRepository(dbContext);
+            config = new MapperConfiguration(cfg =>
+                cfg.CreateMap<User, UserDTO>()
+            );
+            _mapper = new Mapper(config);
         }
-        public async Task<User> Post(UserDTO userDto)
+        public async Task<UserDTO> Post(UserDTO userDto)
         {
             User user = new User()
             {
@@ -30,24 +37,26 @@ namespace SportsApp.Core.Services.UserService
 
             var addedUser = await _userRepository.AddUser(user);
 
-            return addedUser;
+            UserDTO userDTO = _mapper.Map<User, UserDTO>(addedUser);
+            return userDTO;
         }
         public Task<IActionResult> ChangePassword(string email, string password)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<UserDTO> Login(UserDTO userDto)
+        public async Task<UserDTO> Login(UserDTO user)
         {
-            User existingUser = await GetUserByEmail(userDto.Email);
+            User existingUser = await GetUserByEmail(user.Email);
 
-            if (userDto.Password != existingUser.Password)
+            if (user.Password != existingUser.Password)
             {
                 return null;
             }
             else
             {
-                return userDto;
+                UserDTO userDTO = _mapper.Map<User, UserDTO>(existingUser);
+                return userDTO;
             }
         }
         public async Task<User> GetUserByEmail(string email)

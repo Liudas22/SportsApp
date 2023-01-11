@@ -2,11 +2,10 @@ import { useState } from "react";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import "./LoginPage.css";
 import { useToast } from "@chakra-ui/react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Paths } from "../../constants/Paths";
 
 function LoginPage() {
-  const location = useLocation();
-
   const [email, setEmail] = useState({
     email: ""
   });
@@ -47,7 +46,7 @@ function LoginPage() {
         position:"top-right",
         isClosable: true,
       })
-      navigate("/home");
+      navigate(`${process.env.PUBLIC_URL}${Paths.Home}`);
     }
     if (response.status === 404) {
       toast({
@@ -79,7 +78,11 @@ function LoginPage() {
             <Card className="shadow">
               <Card.Body>
                 <div className="mb-3 mt-md-4">
-                  <p className=" mb-5">Prisijungti prie paskyros</p>
+                  <p className=" mb-5">
+                    <strong>
+                      Prisijungti prie paskyros
+                    </strong>
+                  </p>
                   <div className="mb-3">
                     <Form onSubmit = {(e) => submitHandler(e)} >
                     <Form.Group className="mb-3" controlId="formBasicEmail">
