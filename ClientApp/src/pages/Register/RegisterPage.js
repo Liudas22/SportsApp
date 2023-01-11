@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
-import { useToast } from "@chakra-ui/react";
+import { Checkbox, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router";
 
 function RegisterPage() {
@@ -14,6 +14,19 @@ function RegisterPage() {
   const [password, setPassword] = useState({
     password: ""
   });
+  const [role, setRole] = useState({
+    role: 0
+  });
+  const [isCoach, setIsCoach] = useState(false);
+
+  const onCheckboxChange = event => {
+    if (event.target.checked) {
+      setRole(1);
+    } else {
+      setRole(0);
+    }
+    setIsCoach(current => !current);
+  };
 
   const onNameChange = (e) => {
     setName(e.target.value)
@@ -40,6 +53,7 @@ function RegisterPage() {
         name,
         email,
         password,
+        role,
       }),
     }
     const response = await fetch("http://localhost:5046/api/register", requestOptions);
@@ -52,7 +66,7 @@ function RegisterPage() {
         position:"top-right",
         isClosable: true,
       })
-      navigate("/");
+      navigate("/", {state: {idx: 1, name: 'sabaoon'}});
     }
     if (response.status === 409) {
       toast({
@@ -77,7 +91,7 @@ function RegisterPage() {
   }
 
   return(
-    <div className="RegisterForm" style={{ backgroundImage: `url('${process.env.PUBLIC_URL}/Photos/background.jpg')` }}>
+    <div className="RegisterForm">
       <Container >
         <Row className="vh-100 d-flex justify-content-center align-items-center ">
           <Col md={8} lg={6} xs={12}>
@@ -121,6 +135,13 @@ function RegisterPage() {
                             onPasswordChange(e);
                           }} />
                       </Form.Group>
+                      <div className="d-grid">
+                        <Checkbox
+                          value={isCoach}
+                          onChange={onCheckboxChange} >
+                          Esu treneris
+                        </Checkbox>
+                      </div>
                       <div className="d-grid">
                         <Button variant="dark" type="submit">
                           Registruotis

@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap";
 import "./LoginPage.css";
 import { useToast } from "@chakra-ui/react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function LoginPage() {
+  const location = useLocation();
 
   const [email, setEmail] = useState({
     email: ""
@@ -71,7 +72,7 @@ function LoginPage() {
   }
 
   return (
-    <div className="LoginPage" style={{ backgroundImage: `url('${process.env.PUBLIC_URL}/Photos/background.jpg')` }}>
+    <div className="LoginPage">
       <Container >
         <Row className="vh-100 d-flex justify-content-center align-items-center ">
           <Col md={8} lg={6} xs={12}>

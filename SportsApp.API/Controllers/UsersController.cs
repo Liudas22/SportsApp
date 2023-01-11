@@ -33,14 +33,6 @@ namespace SportsApp.Controllers
 
             return Ok(addedUser);
         }
-        /*[HttpPut]
-        [Route("{id:guid}")]
-        public async Task<IActionResult> ChangePassword(string email, string password)
-        {
-            _userRepository.UpdatePassword(email, password);
-
-            return Ok();
-        }*/
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(UserDTO userDto)

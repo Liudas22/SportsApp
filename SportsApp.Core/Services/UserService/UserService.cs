@@ -23,7 +23,9 @@ namespace SportsApp.Core.Services.UserService
                 Id = Guid.NewGuid(),
                 Name = userDto.Name,
                 Email = userDto.Email,
-                Password = userDto.Password
+                Password = userDto.Password,
+                IsLoggedIn = false,
+                Role = userDto.Role
             };
 
             var addedUser = await _userRepository.AddUser(user);
