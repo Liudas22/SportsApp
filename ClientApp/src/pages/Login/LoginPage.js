@@ -4,11 +4,15 @@ import "./LoginPage.css";
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { Paths } from "../../constants/Paths";
+import jwt_decode from "jwt-decode"; 
+
 
 function LoginPage() {
+
   const [email, setEmail] = useState({
     email: ""
   });
+
   const [password, setPassword] = useState({
     password: ""
   });
@@ -16,6 +20,7 @@ function LoginPage() {
   const onEmailChange = (e) => {
     setEmail(e.target.value)
   }
+
   const onPasswordChange = (e) => {
     setPassword(e.target.value)
   }
@@ -36,7 +41,7 @@ function LoginPage() {
         password,
       }),
     }
-    const response = await fetch("http://localhost:5046/api/login", requestOptions);
+    const response = await fetch("http://localhost:5046/api/Users/Login", requestOptions);
 
     if (response.status === 200) {
       toast({
@@ -46,9 +51,17 @@ function LoginPage() {
         position:"top-right",
         isClosable: true,
       })
+      const token = await response.json();
+      localStorage.setItem("accessToken", token.accessToken);
       navigate(`${process.env.PUBLIC_URL}${Paths.Home}`);
+      // console.log("BEFORE DECODING")
+      // console.log(token)
+      // alert(token)
+      // console.log("AFTER DECODING")
+      // const decoded = jwt_decode(token.accessToken)
+      // console.log(decoded.role)
     }
-    if (response.status === 404) {
+    if (response.status === 409) {
       toast({
         title: "Toks naudotojas neegzistuoja",
         status: "error",
@@ -57,7 +70,7 @@ function LoginPage() {
         isClosable: true,
       })
     }
-    if (response.status === 401){
+    if (response.status === 500){
       toast({
         title: "Neteisingas slaptažodis",
         status: "error",
@@ -66,8 +79,6 @@ function LoginPage() {
         isClosable: true,
       });
     }
-    const data = await response.json();
-    console.log(data)
   }
 
   return (

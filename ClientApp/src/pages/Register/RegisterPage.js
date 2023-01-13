@@ -21,7 +21,7 @@ function RegisterPage() {
 
   const onCheckboxChange = event => {
     if (event.target.checked) {
-      setRole(1);
+      setRole(2);
     } else {
       setRole(0);
     }
@@ -56,7 +56,7 @@ function RegisterPage() {
         role,
       }),
     }
-    const response = await fetch("http://localhost:5046/api/register", requestOptions);
+    const response = await fetch("http://localhost:5046/api/Users/Register", requestOptions);
 
     if (response.status === 200) {
       toast({
@@ -68,7 +68,7 @@ function RegisterPage() {
       })
       navigate("/", {state: {idx: 1, name: 'sabaoon'}});
     }
-    if (response.status === 409) {
+    if (response.status === 500) {
       toast({
         title: "Toks naudotojo vardas jau naudojamas",
         status: "error",
@@ -77,7 +77,7 @@ function RegisterPage() {
         isClosable: true,
       })
     }
-    if (response.status === 401) {
+    if (response.status === 409) {
       toast({
         title: "Toks el. paštas jau naudojamas",
         status: "error",

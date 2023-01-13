@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SportsApp.Domain.Models;
+using SportsApp.Domain.Entities;
 
 namespace SportsApp.Infrastructure.Data
 {

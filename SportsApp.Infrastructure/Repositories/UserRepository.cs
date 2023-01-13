@@ -1,43 +1,53 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SportsApp.Domain.Models;
 using SportsApp.Domain.Models.DTO;
+using SportsApp.Core.Interfaces;
 using SportsApp.Infrastructure.Data;
+using SportsApp.Domain.Entities;
 
 namespace SportsApp.Infrastructure.Repositories
 {
-    public class UserRepository
+    public class UserRepository : IUserRepository
     {
         private readonly DatabaseContext _dbContext;
         public UserRepository(DatabaseContext context)
         {
             _dbContext = context;
         }
-        public async Task<List<User>> GetAll()
+
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _dbContext.Users.ToListAsync();
+            var users = await _dbContext.Users.ToListAsync();
+
+            return users;
         }
-        public async Task<User> GetUserByEmail(string email)
+
+        public async Task<User?> GetByEmailOrDefaultAsync(string email)
         {
-            return _dbContext.Users.FirstOrDefault(u => u.Email == email);
-        }
-        public async Task<User> GetUserByName(string name)
-        {
-            return _dbContext.Users.FirstOrDefault(u => u.Name == name);
-        }
-        public async Task<User> AddUser(User user)
-        {
-            _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
+            var users = await _dbContext.Users.ToListAsync();
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
             return user;
         }
-        public async Task UpdatePassword(string email, string password)
+        public async Task<User?> GetByNameOrDefaultAsync(string name)
         {
-            User user = await GetUserByEmail(email);
+            var users = await _dbContext.Users.ToListAsync();
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Name == name);
 
-            user.Password = password;
+            return user;
+        }
 
+        public async Task<User> GetByIdAsync(Guid id)
+        {
+            var user = await _dbContext.Users.FirstAsync(u => u.Id == id);
+
+            return user;
+        }
+        public async Task<User> RegisterAsync(User newUser)
+        {
+            _dbContext.Users.Add(newUser);
             await _dbContext.SaveChangesAsync();
+            return newUser;
         }
     }
 }

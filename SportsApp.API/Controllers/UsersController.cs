@@ -1,60 +1,104 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SportsApp.Core.Services.UserService;
+using SportsApp.Core.Commands;
+using SportsApp.Core.DTO;
+using SportsApp.Core.Interfaces;
 using SportsApp.Domain.Models;
 using SportsApp.Domain.Models.DTO;
 using SportsApp.Infrastructure.Data;
 using SportsApp.Infrastructure.Repositories;
+using SportsApp.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using SportsApp.Domain.Entities;
+using System.Security.Claims;
+using SportsApp.Domain.Enums;
+using SportsApp.API.Attributes;
 
 namespace SportsApp.Controllers
 {
     [ApiController]
-    [Route("api")]
+    [Route("api/[controller]/[action]")]
     public class UsersController : Controller
     {
-        private readonly UserService userService;
-        private MapperConfiguration config;
-        private Mapper _mapper;
-        public UsersController(DatabaseContext dbContext)
+        private readonly IUserRepository _userRepository;
+        private readonly IAuthService _authService;
+        private readonly IJwtService _jwtService;
+        private readonly IMapper _mapper;
+        public UsersController(
+            IUserRepository userRepository,
+            IAuthService authService,
+            IJwtService jwtService,
+            IMapper mapper)
         {
-            userService = new UserService(dbContext);
-            config = new MapperConfiguration(cfg =>
-                cfg.CreateMap<User, UserDTO>()
-            );
-            _mapper = new Mapper(config);
+            _userRepository = userRepository;
+            _authService = authService;
+            _jwtService = jwtService;
+            _mapper = mapper;
         }
         [HttpPost]
-        [Route("register")]
-        public async Task<IActionResult> Register(UserDTO userDto)
+        public async Task<ActionResult<JwtDto>> Login([FromBody] LoginCommand command)
         {
-            if (await userService.GetUserByName(userDto.Name) != null)
-            {
-                return Conflict();
-            }
-            if (await userService.GetUserByEmail(userDto.Email) != null)
-            {
-                return Unauthorized();
-            }
-            var addedUser = await userService.Post(userDto);
+            var user = await _authService.LoginAsync(command);
 
-            return Ok(addedUser);
+            if (user == null)
+                return Conflict("Toks naudotojas neegzistuoja");
+
+            var jwt = _jwtService.BuildJwt(user);
+
+            return Ok(jwt);
         }
         [HttpPost]
-        [Route("login")]
-        public async Task<IActionResult> Login(UserDTO userDto)
+        public async Task<ActionResult> RegisterAsync([FromBody] RegisterCommand command)
         {
-            if (await userService.GetUserByEmail(userDto.Email) == null)
+            var user = await _authService.RegisterAsync(command);
+
+            if(user == null)
             {
-                return NotFound();
+                return Conflict("Toks vartotojas jau egzistuoja");
             }
-            var loginUser = await userService.Login(userDto);
 
-            if (loginUser == null) return Unauthorized();
+            var userDto = _mapper.Map<UserDto>(user);
 
-            loginUser.IsLoggedIn = true;
+            return Ok(userDto);
+        }
+        [HttpGet]
+        [Authorize(
+            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
+            Roles = "User,Admin,Coach")]
+        public async Task<ActionResult<UserDto>> Get()
+        {
+            var user = await _userRepository.GetByIdAsync(UserId);
 
-            return Ok(loginUser);
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return Ok(userDto);
+        }
+        [HttpGet]
+        [AuthorizeRole(UserRole.Admin)]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
+        {
+            var users = await _userRepository.GetAllAsync();
+
+            var usersDto = users.Select(user => _mapper.Map<UserDto>(user));
+
+            return Ok(usersDto);
+        }
+        private Guid UserId
+        {
+            get
+            {
+                try
+                {
+                    return Guid.Parse(User.FindFirstValue(ClaimTypes.Sid));
+                }
+                catch
+                {
+                    throw new InvalidOperationException(
+                        $"Could not access user when there is no authorize attribute");
+                }
+            }
         }
     }
 }
