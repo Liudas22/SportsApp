@@ -4,18 +4,13 @@ import "./LoginPage.css";
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { Paths } from "../../constants/Paths";
-import jwt_decode from "jwt-decode"; 
-
+import jwtDecode from "jwt-decode";
 
 function LoginPage() {
 
-  const [email, setEmail] = useState({
-    email: ""
-  });
+  const [email, setEmail] = useState("");
 
-  const [password, setPassword] = useState({
-    password: ""
-  });
+  const [password, setPassword] = useState("");
 
   const onEmailChange = (e) => {
     setEmail(e.target.value)
@@ -53,15 +48,11 @@ function LoginPage() {
       })
       const token = await response.json();
       localStorage.setItem("accessToken", token.accessToken);
+      const userRole = jwtDecode(token.accessToken).role;
+      localStorage.setItem("Role", userRole);
       navigate(`${process.env.PUBLIC_URL}${Paths.Home}`);
-      // console.log("BEFORE DECODING")
-      // console.log(token)
-      // alert(token)
-      // console.log("AFTER DECODING")
-      // const decoded = jwt_decode(token.accessToken)
-      // console.log(decoded.role)
     }
-    if (response.status === 409) {
+    if (response.status === 404) {
       toast({
         title: "Toks naudotojas neegzistuoja",
         status: "error",

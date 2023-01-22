@@ -43,7 +43,7 @@ namespace SportsApp.Controllers
             var user = await _authService.LoginAsync(command);
 
             if (user == null)
-                return Conflict("Toks naudotojas neegzistuoja");
+                return NotFound("Toks naudotojas neegzistuoja");
 
             var jwt = _jwtService.BuildJwt(user);
 
@@ -67,7 +67,7 @@ namespace SportsApp.Controllers
         [Authorize(
             AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme,
             Roles = "User,Admin,Coach")]
-        public async Task<ActionResult<UserDto>> Get()
+        public async Task<ActionResult<UserDto>> Me()
         {
             var user = await _userRepository.GetByIdAsync(UserId);
 
@@ -77,7 +77,7 @@ namespace SportsApp.Controllers
         }
         [HttpGet]
         [AuthorizeRole(UserRole.Admin)]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> AllUsers()
         {
             var users = await _userRepository.GetAllAsync();
 

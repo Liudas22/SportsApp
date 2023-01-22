@@ -5,25 +5,17 @@ import { useNavigate } from "react-router";
 
 function RegisterPage() {
 
-  const [name, setName] = useState({
-    name: ""
-  });
-  const [email, setEmail] = useState({
-    email: ""
-  });
-  const [password, setPassword] = useState({
-    password: ""
-  });
-  const [role, setRole] = useState({
-    role: 0
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState(0);
   const [isCoach, setIsCoach] = useState(false);
 
   const onCheckboxChange = event => {
     if (event.target.checked) {
-      setRole(2);
+      setRole(2)
     } else {
-      setRole(0);
+      setRole(0)
     }
     setIsCoach(current => !current);
   };
@@ -43,6 +35,8 @@ function RegisterPage() {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    console.log(name, email, password, role, )
 
     const requestOptions = {
       headers: {
@@ -66,7 +60,7 @@ function RegisterPage() {
         position:"top-right",
         isClosable: true,
       })
-      navigate("/", {state: {idx: 1, name: 'sabaoon'}});
+      navigate("/");
     }
     if (response.status === 500) {
       toast({

@@ -9,6 +9,7 @@ namespace SportsApp.Domain.Entities
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        public UserRole Role { get; set; } // 0 - Registered user. 1 - Coach. 2 - Admin 
+        public UserRole Role { get; set; }
+        public int Level { get; set; }
     }
 }

@@ -1,44 +1,37 @@
 ﻿using SportsApp.Core.Commands;
 using SportsApp.Core.Interfaces;
 using SportsApp.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
-using SportsApp.Domain.Enums;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace SportsApp.Infrastructure.Services
+namespace SportsApp.Core.Services
 {
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
-        private static readonly Encoding HashEncoding = Encoding.UTF8;
+        private readonly IHashService _hashService;
 
-        public AuthService(IUserRepository userRepository)
+        public AuthService(IUserRepository userRepository, IHashService hashService)
         {
             _userRepository = userRepository;
-        }
-        public HashPasswordResponse HashPassword(string password)
-        {
-            using var hmac = new HMACSHA512();
-
-            var response = new HashPasswordResponse(
-                PasswordSalt: hmac.Key,
-                PasswordHash: hmac.ComputeHash(HashEncoding.GetBytes(password))
-            );
-
-            return response;
+            _hashService = hashService;
         }
         public async Task<User?> RegisterAsync(RegisterCommand register)
         {
             if (await _userRepository.GetByNameOrDefaultAsync(register.Name) != null)
             {
-                throw new Exception("Toks naudotojo vardas neegzistuoja");
+                throw new Exception("Toks naudotojo vardas jau egzistuoja");
             }
             if (await _userRepository.GetByEmailOrDefaultAsync(register.Email) != null)
             {
                 return null;
             }
 
-            var (passwordHash, passwordSalt) = HashPassword(register.Password);
+            var (passwordHash, passwordSalt) = _hashService.HashPassword(register.Password);
 
             var newUser = new User()
             {
@@ -47,7 +40,8 @@ namespace SportsApp.Infrastructure.Services
                 Email = register.Email,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Role = register.Role
+                Role = register.Role,
+                Level = 0
             };
 
             await _userRepository.RegisterAsync(newUser);
@@ -64,7 +58,7 @@ namespace SportsApp.Infrastructure.Services
             }
 
             using var hmac = new HMACSHA512(user.PasswordSalt);
-            var computedHash = hmac.ComputeHash(HashEncoding.GetBytes(login.Password));
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(login.Password));
 
             if (!computedHash.SequenceEqual(user.PasswordHash))
             {

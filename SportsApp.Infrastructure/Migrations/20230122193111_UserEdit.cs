@@ -2,23 +2,16 @@
 
 #nullable disable
 
-namespace SportsApp.API.Migrations
+namespace SportsApp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Updatedusermodel : Migration
+    public partial class UserEdit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "IsLoggedIn",
-                table: "Users",
-                type: "bit",
-                nullable: false,
-                defaultValue: false);
-
             migrationBuilder.AddColumn<int>(
-                name: "Role",
+                name: "Level",
                 table: "Users",
                 type: "int",
                 nullable: false,
@@ -29,11 +22,7 @@ namespace SportsApp.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsLoggedIn",
-                table: "Users");
-
-            migrationBuilder.DropColumn(
-                name: "Role",
+                name: "Level",
                 table: "Users");
         }
     }

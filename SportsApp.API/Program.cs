@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SportsApp.Core.Interfaces;
+using SportsApp.Core.Services;
 using SportsApp.Infrastructure.AppSettings;
 using SportsApp.Infrastructure.Data;
 using SportsApp.Infrastructure.Repositories;
@@ -19,7 +20,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("SportsApp.API"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddCors(options =>
@@ -39,6 +40,7 @@ builder.Configuration.GetSection(JwtSettings.SectionName).Bind(settings);
 builder.Services.AddSingleton(settings);
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IHashService, HashService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
