@@ -42,8 +42,8 @@ namespace SportsApp.Controllers
         {
             var user = await _authService.LoginAsync(command);
 
-            if (user == null)
-                return NotFound("Toks naudotojas neegzistuoja");
+            /*if (user == null)
+                return NotFound("Toks naudotojas neegzistuoja");*/
 
             var jwt = _jwtService.BuildJwt(user);
 
@@ -54,10 +54,10 @@ namespace SportsApp.Controllers
         {
             var user = await _authService.RegisterAsync(command);
 
-            if(user == null)
+            /*if(user == null)
             {
                 return Conflict("Toks vartotojas jau egzistuoja");
-            }
+            }*/
 
             var userDto = _mapper.Map<UserDto>(user);
 

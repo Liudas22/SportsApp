@@ -1,5 +1,6 @@
 [
     {
+        "ID": 1,
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Un1.svg/120px-Un1.svg.png",
         "PullUps": 10,
         "PushUps": 20,
@@ -7,6 +8,7 @@
         "Squats": 20
     },
     {
+        "ID": 2,
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Deux.svg/120px-Deux.svg.png",
         "PullUps": 15,
         "PushUps": 30,
@@ -14,6 +16,7 @@
         "Squats": 40
     },
     {
+        "ID": 3,
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Trois.svg/120px-Trois.svg.png",
         "PullUps": 20,
         "PushUps": 40,
@@ -21,6 +24,7 @@
         "Squats": 60
     },
     {
+        "ID": 4,
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Quatre.svg/120px-Quatre.svg.png",
         "PullUps": 25,
         "PushUps": 50,
@@ -28,6 +32,7 @@
         "Squats": 80
     },
     {
+        "ID": 5,
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Cinq.svg/120px-Cinq.svg.png",
         "PullUps": 30,
         "PushUps": 60,
@@ -35,6 +40,7 @@
         "Squats": 100
     },
     {
+        "ID": 6,
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Six.svg/120px-Six.svg.png",
         "PullUps": 35,
         "PushUps": 70,
@@ -42,6 +48,7 @@
         "Squats": 120
     },
     {
+        "ID": 7,
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Sept.svg/120px-Sept.svg.png",
         "PullUps": 40,
         "PushUps": 80,
@@ -49,6 +56,7 @@
         "Squats": 140
     },
     {
+        "ID": 8,
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Huit.svg/120px-Huit.svg.png",
         "PullUps": 45,
         "PushUps": 90,
@@ -56,6 +64,7 @@
         "Squats": 160
     },
     {
+        "ID": 9,
         "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Neuf.svg/120px-Neuf.svg.png",
         "PullUps": 50,
         "PushUps": 100,

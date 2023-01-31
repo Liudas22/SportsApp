@@ -1,6 +1,7 @@
 ﻿using SportsApp.Core.Commands;
 using SportsApp.Core.Interfaces;
 using SportsApp.Domain.Entities;
+using SportsApp.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,11 +25,11 @@ namespace SportsApp.Core.Services
         {
             if (await _userRepository.GetByNameOrDefaultAsync(register.Name) != null)
             {
-                throw new Exception("Toks naudotojo vardas jau egzistuoja");
+                throw new ValidationException("Toks naudotojo vardas jau egzistuoja");
             }
             if (await _userRepository.GetByEmailOrDefaultAsync(register.Email) != null)
             {
-                return null;
+                throw new ConflictException("Toks el. paštas jau egzistuoja");
             }
 
             var (passwordHash, passwordSalt) = _hashService.HashPassword(register.Password);
@@ -54,7 +55,7 @@ namespace SportsApp.Core.Services
 
             if (user == null)
             {
-                return null;
+                throw new NotFoundException("Naudotojas su tokiu el. pašto adresu neegzistuoja");
             }
 
             using var hmac = new HMACSHA512(user.PasswordSalt);
@@ -62,7 +63,7 @@ namespace SportsApp.Core.Services
 
             if (!computedHash.SequenceEqual(user.PasswordHash))
             {
-                throw new Exception("Incorrect user password");
+                throw new ValidationException("Neteisingas slaptažodis");
             }
 
             return user;

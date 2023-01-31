@@ -1,32 +1,23 @@
-import { Button } from "react-bootstrap";
+import { useEffect, React } from "react"
+import { useNavigate } from "react-router"
+import { Paths } from "../../constants/Paths"
 import "./HomePage.css"
-import {Paths} from "../../constants/Paths"
 
 function HomePage() {
 
-  const token = localStorage.getItem("accessToken");
+    const navigate = useNavigate()
 
-  const random = (e) => {
-    e.preventDefault();
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken")
+        if(!token){
+            navigate(`${process.env.PUBLIC_URL}${Paths.Login}`)
+        }})
 
+    return (
+        <div className="HomePage" >
 
-
-    fetch(Paths.Api_URL + 'Get', {
-      method: 'get',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-      },
-    })
-  };
-
-  return (
-    <div className="HomePage" >
-      {/* <Button onClick={(e) => random(e, token)}>
-        Random funkcija
-      </Button> */}
-    </div>
-  );
+        </div>
+    )
 }
 
-export default HomePage;
+export default HomePage
