@@ -33,8 +33,6 @@ export default function UploadVideoPage(){
             })
             .then((data) => setUploadedBy(data.name))
 
-        console.log(uploadedBy)
-
         const requestOptions = {
             headers: {
                 "Content-Type": "application/json",

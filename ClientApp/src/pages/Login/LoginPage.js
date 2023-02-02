@@ -26,7 +26,7 @@ function LoginPage() {
         const token = localStorage.getItem("accessToken")
         if(token){
             navigate(`${process.env.PUBLIC_URL}${Paths.Home}`)
-        }})
+        }}, [])
 
     const submitHandler = async (e) => {
         e.preventDefault()
@@ -42,6 +42,7 @@ function LoginPage() {
             }),
         }
         const response = await fetch("http://localhost:5046/api/Users/Login", requestOptions)
+        const data = await response.json()
 
         if (response.status === 200) {
             toast({
@@ -51,15 +52,14 @@ function LoginPage() {
                 position:"top-right",
                 isClosable: true,
             })
-            const token = await response.json()
-            localStorage.setItem("accessToken", token.accessToken)
-            const userRole = jwtDecode(token.accessToken).role
+            localStorage.setItem("accessToken", data.accessToken)
+            const userRole = jwtDecode(data.accessToken).role
             localStorage.setItem("Role", userRole)
             navigate(`${process.env.PUBLIC_URL}${Paths.Home}`)
         }
         if (response.status === 400) {
             toast({
-                title: "Neteisingi prisijungimo duomenys",
+                title: data.message,
                 status: "error",
                 duration: 5000,
                 position:"top-right",

@@ -49,5 +49,12 @@ namespace SportsApp.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
             return newUser;
         }
+
+        public async Task<User> DeleteAsync(User user)
+        {
+            _dbContext.Users.Remove(user);
+            await _dbContext.SaveChangesAsync();
+            return null;
+        }
     }
 }

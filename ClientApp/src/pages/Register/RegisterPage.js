@@ -57,7 +57,7 @@ export default function RegisterPage() {
             }),
         }
         const response = await fetch("http://localhost:5046/api/Users/Register", requestOptions)
-
+        const data = await response.json()
         if (response.status === 200) {
             toast({
                 title: "Registracija sėkminga",
@@ -70,7 +70,7 @@ export default function RegisterPage() {
         }
         if (response.status === 400) {
             toast({
-                title: "Toks naudotojo vardas užimtas",
+                title: data.message,
                 status: "error",
                 duration: 5000,
                 position:"top-right",
@@ -79,7 +79,7 @@ export default function RegisterPage() {
         }
         if (response.status === 409) {
             toast({
-                title: "Toks el. paštas užimtas",
+                title: data.message,
                 status: "error",
                 duration: 5000,
                 position:"top-right",

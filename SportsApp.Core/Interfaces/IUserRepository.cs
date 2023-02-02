@@ -9,5 +9,6 @@ namespace SportsApp.Core.Interfaces
         Task<User?> GetByNameOrDefaultAsync(string name);
         Task<IEnumerable<User>> GetAllAsync();
         Task<User> RegisterAsync(User user);
+        Task<User> DeleteAsync(User user);
     }
 }

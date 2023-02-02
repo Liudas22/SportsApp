@@ -15,6 +15,7 @@ using SportsApp.Domain.Entities;
 using System.Security.Claims;
 using SportsApp.Domain.Enums;
 using SportsApp.API.Attributes;
+using SportsApp.Core.Services;
 
 namespace SportsApp.Controllers
 {
@@ -24,16 +25,19 @@ namespace SportsApp.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
         private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
         public UsersController(
             IUserRepository userRepository,
             IAuthService authService,
+            IUserService userService,
             IJwtService jwtService,
             IMapper mapper)
         {
             _userRepository = userRepository;
             _authService = authService;
+            _userService = userService;
             _jwtService = jwtService;
             _mapper = mapper;
         }
@@ -76,6 +80,14 @@ namespace SportsApp.Controllers
             var usersDto = users.Select(user => _mapper.Map<UserDto>(user));
 
             return Ok(usersDto);
+        }
+        [HttpDelete("{email}")]
+        [AuthorizeRole(UserRole.Admin)]
+        public async Task<ActionResult<IEnumerable<UserDto>>> DeleteUser(string email)
+        {
+            await _userService.DeleteAsync(email);
+
+            return Ok();
         }
         private Guid UserId
         {

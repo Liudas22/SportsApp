@@ -45,6 +45,7 @@ builder.Services.AddSingleton(settings);
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IHashService, HashService>();
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IVideoService, VideoService>();
 builder.Services.AddTransient<IVideoRepository, VideoRepository>();

@@ -1,3 +1,6 @@
-.Table{
-    background-color: blue;
+.button{
+    background-color: rgb(61, 125, 243);
+    border-radius: 5px;
+    width: 75px;
+    color: white;
 }
