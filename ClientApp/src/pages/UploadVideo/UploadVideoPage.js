@@ -3,6 +3,7 @@ import { React, useEffect, useState } from "react"
 import { useNavigate } from "react-router"
 import { useToast } from "@chakra-ui/react"
 import { Paths } from "../../constants/Paths"
+import { useCallback } from "react"
 
 export default function UploadVideoPage(){
 
@@ -12,27 +13,37 @@ export default function UploadVideoPage(){
             navigate(`${process.env.PUBLIC_URL}${Paths.Login}`)
         }})
 
-    const [uploadedBy, setUploadedBy] = useState(" ")
+    const [uploadedBy, setUploadedBy] = useState("")
     const [link, setLink] = useState("")
     const navigate = useNavigate()
     const toast = useToast()
 
-    const submitHandler = async (e) => {
-        e.preventDefault()
-
-        const options = {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer " + token
-            }
+    const getMeOptions = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
         }
-        await fetch("http://localhost:5046/api/Users/Me", options)
+    }
+
+    const getUsers = useCallback(async () => {
+
+        await fetch("http://localhost:5046/api/Users/Me", getMeOptions)
             .then((response) => {
                 return response.json()
             })
             .then((data) => setUploadedBy(data.name))
+    }, [])
 
+    useEffect(() => { 
+        if(!token){
+            navigate(`${process.env.PUBLIC_URL}${Paths.Login}`)
+        }
+        getUsers()
+    }, [])
+
+    const submitHandler = async (e) => {
+        e.preventDefault()
         const requestOptions = {
             headers: {
                 "Content-Type": "application/json",
