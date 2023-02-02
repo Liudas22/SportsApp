@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Update.Internal;
+using SportsApp.Core.Commands;
 using SportsApp.Core.Interfaces;
 using SportsApp.Domain.Entities;
 using SportsApp.Infrastructure.Data;
@@ -24,9 +26,9 @@ namespace SportsApp.Infrastructure.Repositories
             return newVideo;
         }
 
-        public async Task<Video> GetByLinkAsync(string link)
+        public async Task<Video> GetByLinkAndNameAsync(UploadVideoCommand command)
         {
-            var video = await _dbContext.Videos.FirstOrDefaultAsync(u => u.Link == link);
+            var video = await _dbContext.Videos.FirstOrDefaultAsync(u => u.Link == command.Link && u.UploadedBy == command.UploadedBy);
 
             return video;
         }

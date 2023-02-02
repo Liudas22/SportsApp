@@ -1,9 +1,10 @@
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap"
-import { useEffect, React, useState } from "react"
+import { React, useEffect, useState } from "react"
 import { useNavigate } from "react-router"
+import { useToast } from "@chakra-ui/react"
 import { Paths } from "../../constants/Paths"
 
-export default function    UploadVideoPage(){
+export default function UploadVideoPage(){
 
     const token = localStorage.getItem("accessToken")
     useEffect(() => {
@@ -14,8 +15,10 @@ export default function    UploadVideoPage(){
     const [uploadedBy, setUploadedBy] = useState(" ")
     const [link, setLink] = useState("")
     const navigate = useNavigate()
+    const toast = useToast()
 
-    const getData = async () => {
+    const submitHandler = async (e) => {
+        e.preventDefault()
 
         const options = {
             method: "GET",
@@ -26,36 +29,12 @@ export default function    UploadVideoPage(){
         }
         await fetch("http://localhost:5046/api/Users/Me", options)
             .then((response) => {
-                if(response.status === 200){
-                //     toast({
-                //         title: "Vaizdo įrašas pridėtas sėkmingai",
-                //         status: "success",
-                //         duration: 5000,
-                //         position:"top-right",
-                //         isClosable: true,
-                //     })
-                    return response.json()
-                }else if(response.status === 401){
-                //     toast({
-                //         title: "Vaizdo įrašas jau egzistuoja",
-                //         status: "error",
-                //         duration: 5000,
-                //         position:"top-right",
-                //         isClosable: true,
-                //     })
-                }
+                return response.json()
             })
             .then((data) => setUploadedBy(data.name))
-    }
 
-    useEffect(() => {
-        getData()
-    })
+        console.log(uploadedBy)
 
-    const submitHandler = async (e) => {
-        e.preventDefault()
-        
-        //const toast = useToast()
         const requestOptions = {
             headers: {
                 "Content-Type": "application/json",
@@ -67,40 +46,40 @@ export default function    UploadVideoPage(){
             }),
         }
         const response = await fetch("http://localhost:5046/api/Video/UploadVideo", requestOptions)
-
+        const data = await response.json()
         if (response.status === 200) {
-            console.log("STATUS 200")
-            /*toast({
-                title: "Registracija sėkminga",
+            toast({
+                title: "Vaizdo įrašas įkeltas sėkmingai",
                 status: "success",
                 duration: 5000,
                 position:"top-right",
                 isClosable: true,
-            })*/
+            })
+            navigate(Paths.Home)
         }
         if (response.status === 409) {
-            console.log("STATUS 409")
-            /*toast({
-                title: "Toks el. paštas jau naudojamas",
+            toast({
+                title: data.Message,
                 status: "error",
                 duration: 5000,
                 position:"top-right",
                 isClosable: true,
-            })*/
+            })
         }
-        const data = await response.json()
-        console.log(data)
     }
-
     return(
-        <div className="RegisterForm">
+        <div className="vh-100">
             <Container >
                 <Row className="vh-100 d-flex justify-content-center align-items-center ">
                     <Col md={8} lg={6} xs={12}>
                         <Card className="shadow">
                             <Card.Body>
                                 <div className="mb-3 mt-md-4">
-                                    <p className=" mb-5">Registracija</p>
+                                    <p className=" mb-5">
+                                        <strong>
+                                            Vaizdo įrašo įkėlimas
+                                        </strong>
+                                    </p>
                                     <div className="mb-3">
                                         <Form onSubmit = {(e) => submitHandler(e)} >
                                             <Form.Group className="mb-3" controlId="formBasicText">

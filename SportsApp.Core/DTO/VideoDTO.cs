@@ -10,5 +10,6 @@ namespace SportsApp.Core.DTO
     {
         public string UploadedBy { get; set; }
         public string Link { get; set; }
+        public bool IsApproved { get; set; }
     }
 }

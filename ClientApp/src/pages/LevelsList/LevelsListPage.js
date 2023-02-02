@@ -32,9 +32,9 @@ export default function LevelsListPage(){
                     <div className="d-flex mt-2" style={{ gap: "10px", flexWrap: "wrap", justifyContent: "space-around", height: "100vh"}}>
                         {LevelsData.map(level => {
                             return (
-                                <Card key={level.ID} className="shadow" style={{ width: "30%" }}>
+                                <Card key={level.ID} className="shadow" style={{ width: "21%" }}>
                                     <Card.Body>
-                                        <div className="mb-3 mt-md-4">
+                                        <div className="mb-3 mt-md-4" >
                                             <Image
                                                 src={level.logo}
                                                 borderradius="sm"

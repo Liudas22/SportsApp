@@ -11,5 +11,6 @@ namespace SportsApp.Domain.Entities
         public Guid Id { get; set; }
         public string UploadedBy { get; set; }
         public string Link { get; set; }
+        public bool IsApproved { get; set; }
     }
 }

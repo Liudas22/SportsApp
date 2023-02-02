@@ -1,4 +1,5 @@
 import React from "react"
+import { NavDropdown } from "react-bootstrap"
 import Container from "react-bootstrap/Container"
 import Nav from "react-bootstrap/Nav"
 import Navbar from "react-bootstrap/Navbar"
@@ -43,7 +44,7 @@ function NavigationBar() {
                             </Nav>
                             <Nav className="me-left">
                                 <Nav.Link onClick={() => navigate(Paths.VideoList)}>
-                                    Vaizdo įrašai
+                                    Mano vaizdo įrašai
                                 </Nav.Link>
                             </Nav>
                             {isAdmin ? (
@@ -60,7 +61,7 @@ function NavigationBar() {
                                         <>
                                             <Nav className="me-left">
                                                 <Nav.Link onClick={() => navigate(Paths.VideoList)}>
-                                                    Vaizdo įrašai
+                                                    Nepatvirtinti vaizdo įrašai
                                                 </Nav.Link>
                                             </Nav>
                                         </>
@@ -69,10 +70,11 @@ function NavigationBar() {
                                     )}
                                 </>
                             )}
-                            <Nav className="right">
-                                <Nav.Link onClick={(e) => Logout(e)}>
-                                    Atsijungti
-                                </Nav.Link>
+                            <Nav className="me-right">              
+                                <NavDropdown title={<i className="bi bi-file-earmark-person"></i>} id="basic-nav-dropdown" >
+                                    <NavDropdown.Item onClick={() => navigate(Paths.User)}>Profilis</NavDropdown.Item>
+                                    <NavDropdown.Item onClick={(e) => Logout(e)}>Atsijungti</NavDropdown.Item>
+                                </NavDropdown>
                             </Nav>
                         </>
                     )}

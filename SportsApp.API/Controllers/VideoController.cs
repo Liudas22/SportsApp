@@ -6,6 +6,7 @@ using SportsApp.Core.DTO;
 using SportsApp.Core.Interfaces;
 using SportsApp.Core.Services;
 using SportsApp.Domain.Enums;
+using SportsApp.Domain.Exceptions;
 using SportsApp.Domain.Models.DTO;
 using SportsApp.Infrastructure.Repositories;
 
@@ -34,7 +35,7 @@ namespace SportsApp.API.Controllers
 
             if (video == null)
             {
-                return Conflict("Toks vaizdo įrašas jau egzistuoja");
+                throw new ConflictException("Toks vaizdo įrašas jau egzistuoja");
             }
 
             var videoDto = _mapper.Map<VideoDTO>(video);

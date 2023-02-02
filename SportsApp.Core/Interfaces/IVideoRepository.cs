@@ -1,4 +1,5 @@
-﻿using SportsApp.Domain.Entities;
+﻿using SportsApp.Core.Commands;
+using SportsApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SportsApp.Core.Interfaces
 {
     public interface IVideoRepository
     {
-        Task<Video> GetByLinkAsync(string link);
+        Task<Video> GetByLinkAndNameAsync(UploadVideoCommand command);
         Task<Video> AddVideo(Video newVideo);
         Task<IEnumerable<Video>> GetAllAsync();
     }

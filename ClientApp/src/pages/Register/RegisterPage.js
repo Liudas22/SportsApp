@@ -68,9 +68,9 @@ export default function RegisterPage() {
             })
             navigate("/")
         }
-        if (response.status === 500) {
+        if (response.status === 400) {
             toast({
-                title: "Toks naudotojo vardas jau naudojamas",
+                title: "Toks naudotojo vardas užimtas",
                 status: "error",
                 duration: 5000,
                 position:"top-right",
@@ -79,7 +79,7 @@ export default function RegisterPage() {
         }
         if (response.status === 409) {
             toast({
-                title: "Toks el. paštas jau naudojamas",
+                title: "Toks el. paštas užimtas",
                 status: "error",
                 duration: 5000,
                 position:"top-right",
@@ -96,7 +96,11 @@ export default function RegisterPage() {
                         <Card className="shadow">
                             <Card.Body>
                                 <div className="mb-3 mt-md-4">
-                                    <p className=" mb-5">Registracija</p>
+                                    <p className=" mb-5">
+                                        <strong>
+                                            Registracija
+                                        </strong>
+                                    </p>
                                     <div className="mb-3">
                                         <Form onSubmit = {(e) => submitHandler(e)} >
                                             <Form.Group className="mb-3" controlId="formBasicText">

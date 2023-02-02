@@ -57,18 +57,9 @@ function LoginPage() {
             localStorage.setItem("Role", userRole)
             navigate(`${process.env.PUBLIC_URL}${Paths.Home}`)
         }
-        if (response.status === 404) {
+        if (response.status === 400) {
             toast({
-                title: "Toks naudotojas neegzistuoja",
-                status: "error",
-                duration: 5000,
-                position:"top-right",
-                isClosable: true,
-            })
-        }
-        if (response.status === 500){
-            toast({
-                title: "Neteisingas slaptažodis",
+                title: "Neteisingi prisijungimo duomenys",
                 status: "error",
                 duration: 5000,
                 position:"top-right",

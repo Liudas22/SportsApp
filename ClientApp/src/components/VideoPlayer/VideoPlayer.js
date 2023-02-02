@@ -1,12 +1,11 @@
 import React from "react"
-// import ReactPlayer from "react-player"
+import ReactPlayer from "react-player"
 import PropTypes from "prop-types"
 
 function VideoPlayer({url}) {
     return(
-        <div>
-            {url}
-            {/* <ReactPlayer url={url} width="100%" height="100%"/> */}
+        <div className="vh-100">
+            <ReactPlayer url={url} width="25%" height="25%"/>
         </div>
     )
 }
