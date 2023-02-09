@@ -25,7 +25,7 @@ namespace SportsApp.Core.Services
         {
             if (await _userRepository.GetByNameOrDefaultAsync(register.Name) != null)
             {
-                throw new ValidationException("Toks naudotojo vardas užimtas");
+                throw new ConflictException("Toks naudotojo vardas užimtas");
             }
             if (await _userRepository.GetByEmailOrDefaultAsync(register.Email) != null)
             {
@@ -55,7 +55,7 @@ namespace SportsApp.Core.Services
 
             if (user == null)
             {
-                throw new ValidationException("Naudotojas su tokiu el. pašto adresu neegzistuoja");
+                throw new NotFoundException("Naudotojas su tokiu el. pašto adresu neegzistuoja");
             }
 
             using var hmac = new HMACSHA512(user.PasswordSalt);

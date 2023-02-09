@@ -11,5 +11,6 @@ namespace SportsApp.Core.Interfaces
     public interface IUserService
     {
         Task<User?> DeleteAsync(string email);
+        Task<User?> UpdateUserLevelAsync(string username);
     }
 }

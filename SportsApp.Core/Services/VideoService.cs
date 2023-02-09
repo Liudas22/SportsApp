@@ -36,5 +36,17 @@ namespace SportsApp.Core.Services
 
             return video;
         }
+        public async Task<Video?> UpdateVideoStatusAsync(UpdateVideoStatusCommand command)
+        {
+            var video = await _videoRepository.GetByLinkAsync(command.Link);
+
+            if (video == null)
+            {
+                throw new NotFoundException("Vaizdo įrašas nerastas");
+            }
+            await _videoRepository.UpdateStatusAsync(video, command.Status);
+
+            return video;
+        }
     }
 }

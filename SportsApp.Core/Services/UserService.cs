@@ -27,7 +27,19 @@ namespace SportsApp.Core.Services
             }
             await _userRepository.DeleteAsync(user);
 
-            return null;
+            return user;
+        }
+        public async Task<User?> UpdateUserLevelAsync(string username)
+        {
+            var user = await _userRepository.GetByNameOrDefaultAsync(username);
+
+            if (user == null)
+            {
+                throw new NotFoundException("Naudotojas nerastas");
+            }
+            await _userRepository.UpdateLevelAsync(user);
+
+            return user;
         }
     }
 }

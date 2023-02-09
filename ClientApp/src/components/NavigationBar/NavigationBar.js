@@ -32,7 +32,7 @@ function NavigationBar() {
 
                     {!token ? (
                         <>
-                            <Nav className="me-left">
+                            <Nav className="me-right">
                                 <Nav.Link onClick={() => navigate(Paths.Login)}>Prisijungti</Nav.Link>
                                 <Nav.Link onClick={() => navigate(Paths.Register)}>Registruotis</Nav.Link>
                             </Nav>
@@ -60,7 +60,7 @@ function NavigationBar() {
                                     {isCoach ? (
                                         <>
                                             <Nav className="me-left">
-                                                <Nav.Link onClick={() => navigate(Paths.VideoList)}>
+                                                <Nav.Link onClick={() => navigate(Paths.UnapprovedVideos)}>
                                                     Nepatvirtinti vaizdo įrašai
                                                 </Nav.Link>
                                             </Nav>

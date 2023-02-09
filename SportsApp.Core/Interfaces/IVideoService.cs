@@ -10,6 +10,7 @@ namespace SportsApp.Core.Interfaces
 {
     public interface IVideoService
     {
-        Task<Video?> UploadVideoAsync(UploadVideoCommand login);
+        Task<Video?> UploadVideoAsync(UploadVideoCommand command);
+        Task<Video?> UpdateVideoStatusAsync(UpdateVideoStatusCommand command);
     }
 }

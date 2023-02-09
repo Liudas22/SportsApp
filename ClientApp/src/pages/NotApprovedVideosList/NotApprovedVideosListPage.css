@@ -1,0 +1,22 @@
+.previewButton{
+    background-color: rgb(61, 125, 243);
+    border-radius: 5px;
+    width: 170px;
+    height: 20px;
+    color: white;
+}
+.approveButton{
+    background-color: rgb(61, 125, 243);
+    border-radius: 5px;
+    width: 75px;
+    height: 20px;
+    color: white;
+}
+.declineButton{
+    background-color: rgb(255, 0, 0);
+    border-radius: 5px;
+    width: 75px;
+    height: 20px;
+    color: white;
+    margin-left: 5px;
+}

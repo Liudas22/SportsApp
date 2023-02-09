@@ -58,6 +58,8 @@ export default function RegisterPage() {
         }
         const response = await fetch("http://localhost:5046/api/Users/Register", requestOptions)
         const data = await response.json()
+        console.log(response)
+        console.log(data.Message)
         if (response.status === 200) {
             toast({
                 title: "Registracija sėkminga",
@@ -68,18 +70,9 @@ export default function RegisterPage() {
             })
             navigate("/")
         }
-        if (response.status === 400) {
-            toast({
-                title: data.message,
-                status: "error",
-                duration: 5000,
-                position:"top-right",
-                isClosable: true,
-            })
-        }
         if (response.status === 409) {
             toast({
-                title: data.message,
+                title: data.Message,
                 status: "error",
                 duration: 5000,
                 position:"top-right",

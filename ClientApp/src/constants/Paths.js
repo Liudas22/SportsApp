@@ -6,5 +6,6 @@ export const Paths = {
     UploadVideo: "/levels/uploadVideo",
     UsersList: "/users",
     VideoList: "/videos",
-    User: "/user"
+    User: "/user",
+    UnapprovedVideos: "/UnapprovedVideos"
 }

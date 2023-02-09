@@ -8,6 +8,7 @@ import { Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from "@
 import { Button, Card, Container, Row } from "react-bootstrap"
 import Modal from "react-bootstrap/Modal"
 import { useToast } from "@chakra-ui/react"
+import jwtDecode from "jwt-decode"
 
 export default function AllUsersPage() {
 
@@ -76,10 +77,27 @@ export default function AllUsersPage() {
             .then((data) => setCurrentUserName(data.name))
     }, [])
 
-    useEffect(() => { 
+    const handleToken = useCallback(() => {
         if(!token){
             navigate(`${process.env.PUBLIC_URL}${Paths.Login}`)
         }
+        const { exp } = jwtDecode(token)
+        const expirationTime = (exp * 1000) - 60000
+        if (Date.now() >= expirationTime) {
+            toast({
+                title: "Baigėsi sesijos galiojimo laikas",
+                status: "warning",
+                duration: 5000,
+                position:"top-right",
+                isClosable: true,
+            })
+            navigate(Paths.Login)
+            localStorage.clear()
+        }
+    })
+
+    useEffect(() => {
+        handleToken()
         getUsers()
     }, [])
 
@@ -101,7 +119,7 @@ export default function AllUsersPage() {
                 }
                 if (response.status === 404) {
                     toast({
-                        title: response.json().message,
+                        title: response.json().Message,
                         status: "error",
                         duration: 5000,
                         position:"top-right",

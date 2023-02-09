@@ -13,5 +13,8 @@ namespace SportsApp.Core.Interfaces
         Task<Video> GetByLinkAndNameAsync(UploadVideoCommand command);
         Task<Video> AddVideo(Video newVideo);
         Task<IEnumerable<Video>> GetAllAsync();
+        Task<IEnumerable<Video>> GetUnapprovedVideosAsync();
+        Task<Video> GetByLinkAsync(string link);
+        Task<Video> UpdateStatusAsync(Video videoToChange, bool status);
     }
 }

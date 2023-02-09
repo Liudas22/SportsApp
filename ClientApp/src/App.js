@@ -24,7 +24,7 @@ function App() {
                     <Route path="/register" element={ <RegisterPage /> } />
                     <Route path="/levels" element={ <LevelsListPage /> } />
                     <Route path="/levels/uploadVideo" element={ <UploadVideoPage /> } />
-                    <Route path="/videos" element={ <NotApprovedVideosListPage /> } />
+                    <Route path="/UnapprovedVideos" element={ <NotApprovedVideosListPage /> } />
                     <Route path="/user" element={ <UserPage /> } />
                     <Route path="/users" element={ <AllUsersPage /> } />
                 </Routes>

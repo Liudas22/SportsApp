@@ -5,6 +5,7 @@ using SportsApp.Core.Commands;
 using SportsApp.Core.DTO;
 using SportsApp.Core.Interfaces;
 using SportsApp.Core.Services;
+using SportsApp.Domain.Entities;
 using SportsApp.Domain.Enums;
 using SportsApp.Domain.Exceptions;
 using SportsApp.Domain.Models.DTO;
@@ -50,6 +51,23 @@ namespace SportsApp.API.Controllers
             var videosDto = videos.Select(video => _mapper.Map<VideoDTO>(video));
 
             return Ok(videosDto);
+        }
+        [HttpGet]
+        [AuthorizeRole(UserRole.Coach)]
+        public async Task<ActionResult<IEnumerable<VideoDTO>>> GetUnapprovedVideos()
+        {
+            var videos = await _videoRepository.GetUnapprovedVideosAsync();
+
+            var videosDto = videos.Select(video => _mapper.Map<VideoDTO>(video));
+
+            return Ok(videosDto);
+        }
+        [HttpPut]
+        public async Task<ActionResult> UpdateVideoStatus(UpdateVideoStatusCommand command)
+        {
+            var video = await _videoService.UpdateVideoStatusAsync(command);
+
+            return Ok(video);
         }
     }
 }

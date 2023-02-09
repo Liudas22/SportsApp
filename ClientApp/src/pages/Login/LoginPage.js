@@ -57,9 +57,18 @@ function LoginPage() {
             localStorage.setItem("Role", userRole)
             navigate(`${process.env.PUBLIC_URL}${Paths.Home}`)
         }
-        if (response.status === 400) {
+        if (data.StatusCode === 404) {
             toast({
-                title: data.message,
+                title: data.Message,
+                status: "error",
+                duration: 5000,
+                position:"top-right",
+                isClosable: true,
+            })
+        }
+        if (data.StatusCode === 400) {
+            toast({
+                title: data.Message,
                 status: "error",
                 duration: 5000,
                 position:"top-right",
