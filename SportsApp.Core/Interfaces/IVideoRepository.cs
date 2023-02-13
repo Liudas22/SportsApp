@@ -1,5 +1,7 @@
 ﻿using SportsApp.Core.Commands;
+using SportsApp.Core.DTO;
 using SportsApp.Domain.Entities;
+using SportsApp.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +15,9 @@ namespace SportsApp.Core.Interfaces
         Task<Video> GetByLinkAndNameAsync(UploadVideoCommand command);
         Task<Video> AddVideo(Video newVideo);
         Task<IEnumerable<Video>> GetAllAsync();
-        Task<IEnumerable<Video>> GetUnapprovedVideosAsync();
+        Task<IEnumerable<Video>> GetPendingVideosAsync();
         Task<Video> GetByLinkAsync(string link);
-        Task<Video> UpdateStatusAsync(Video videoToChange, bool status);
+        Task<Video> UpdateStatusAsync(Video videoToChange, VideoStatus status);
+        Task<IEnumerable<Video>> GetMyVideos(string username);
     }
 }

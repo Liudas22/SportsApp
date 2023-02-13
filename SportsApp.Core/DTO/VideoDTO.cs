@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SportsApp.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,6 @@ namespace SportsApp.Core.DTO
     {
         public string UploadedBy { get; set; }
         public string Link { get; set; }
-        public bool IsApproved { get; set; }
+        public VideoStatus Status { get; set; }
     }
 }

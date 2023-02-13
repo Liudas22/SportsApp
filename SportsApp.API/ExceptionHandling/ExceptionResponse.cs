@@ -4,6 +4,9 @@ namespace SportsApp.API.ExceptionHandling
 {
     public class ExceptionResponse
     {
+        public int StatusCode { get; set; }
+
+        public string Message { get; set; }
         public ExceptionResponse()
         {
         }
@@ -13,10 +16,6 @@ namespace SportsApp.API.ExceptionHandling
             StatusCode = statusCode;
             Message = message;
         }
-
-        public int StatusCode { get; set; }
-
-        public string Message { get; set; }
 
         public override string ToString()
         {

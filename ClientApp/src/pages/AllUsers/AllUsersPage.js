@@ -2,18 +2,18 @@ import "./AllUsersPage.css"
 import { useCallback } from "react"
 import { useEffect } from "react"
 import { React, useState } from "react"
-import { useNavigate } from "react-router"
-import { Paths } from "../../constants/Paths"
 import { Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
 import { Button, Card, Container, Row } from "react-bootstrap"
 import Modal from "react-bootstrap/Modal"
 import { useToast } from "@chakra-ui/react"
+import { Paths } from "../../constants/Paths"
 import jwtDecode from "jwt-decode"
+import { useNavigate } from "react-router"
 
 export default function AllUsersPage() {
 
-    const navigate = useNavigate()
     const toast = useToast()
+    const navigate = useNavigate()
     const token = localStorage.getItem("accessToken")
     const [allUsers, setAllUsers] = useState([])
     const [email, setEmail] = useState("")
@@ -79,22 +79,31 @@ export default function AllUsersPage() {
 
     const handleToken = useCallback(() => {
         if(!token){
-            navigate(`${process.env.PUBLIC_URL}${Paths.Login}`)
-        }
-        const { exp } = jwtDecode(token)
-        const expirationTime = (exp * 1000) - 60000
-        if (Date.now() >= expirationTime) {
             toast({
-                title: "Baigėsi sesijos galiojimo laikas",
-                status: "warning",
+                title: "Turite prisijungti",
+                status: "error",
                 duration: 5000,
                 position:"top-right",
                 isClosable: true,
             })
-            navigate(Paths.Login)
-            localStorage.clear()
+            navigate(`${process.env.PUBLIC_URL}${Paths.Login}`)
         }
-    })
+        else{
+            const { exp } = jwtDecode(token)
+            const expirationTime = (exp * 1000) - 60000
+            if (Date.now() >= expirationTime) {
+                toast({
+                    title: "Baigėsi sesijos galiojimo laikas",
+                    status: "warning",
+                    duration: 5000,
+                    position:"top-right",
+                    isClosable: true,
+                })
+                navigate(Paths.Login)
+                localStorage.clear()
+            }
+        }
+    }, [])
 
     useEffect(() => {
         handleToken()

@@ -7,5 +7,5 @@ export const Paths = {
     UsersList: "/users",
     VideoList: "/videos",
     User: "/user",
-    UnapprovedVideos: "/UnapprovedVideos"
+    UnapprovedVideos: "/PendingVideos"
 }

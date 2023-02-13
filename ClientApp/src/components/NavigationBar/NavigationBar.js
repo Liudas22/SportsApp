@@ -1,3 +1,4 @@
+import jwtDecode from "jwt-decode"
 import React from "react"
 import { NavDropdown } from "react-bootstrap"
 import Container from "react-bootstrap/Container"
@@ -10,9 +11,13 @@ function NavigationBar() {
     const navigate = useNavigate()
 
     const token = localStorage.getItem("accessToken")
-    let role = localStorage.getItem("Role")
-    const isAdmin = (role === "Admin")
-    const isCoach = (role === "Coach")
+    let isAdmin = false
+    let isCoach = false
+    if(token){
+        const role = jwtDecode(token).role
+        isAdmin = (role === "Admin")
+        isCoach = (role === "Coach")
+    }
 
     const Logout = (e) => {
         e.preventDefault()

@@ -1,4 +1,5 @@
 import { Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react"
+import jwtDecode from "jwt-decode"
 import React from "react"
 import { useCallback } from "react"
 import { useState } from "react"
@@ -6,49 +7,36 @@ import { useEffect } from "react"
 import { Button, Card, Container, Modal, Row } from "react-bootstrap"
 import { useNavigate } from "react-router"
 import { Paths } from "../../constants/Paths"
-import "./NotApprovedVideosListPage.css"
+import "./PendingVideosListPage.css"
 
-export default function NotApprovedVideosListPage() {
+export default function PendingVideosListPage() {
 
     const navigate = useNavigate()
     const token = localStorage.getItem("accessToken")
-    const [unapprovedVideos, setUnapprovedVideos] = useState([])
+    const [pendingVideos, setPendingVideos] = useState([])
     const [approveShow, setApproveShow] = useState(false)
     const [declineShow, setDeclineShow] = useState(false)
-    const [status, setStatus] = useState(false)
+    const [Status, setStatus] = useState(0)
     const [username, setUsername] = useState("")
-    const [link, setLink] = useState("")
+    const [Link, setLink] = useState("")
     const toast = useToast()
 
     const openInNewTab = (url) => {
         window.open(url, "_blank", "noreferrer")
     }
-    const updateRequestOptions = {
+
+    const updateVideoRequestOptions = {
         headers: { 
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-            link,
-            status,
+            Link,
+            Status,
         }),
         method: "PUT"
     }
 
-    const handleApproveShow = async (uploadedBy, videoLink) => {
-        setStatus(true)
-        setUsername(uploadedBy)
-        setLink(videoLink)
-        setApproveShow(true)
-    }
-    const handleDeclineShow = async () => {
-        setStatus(false)
-        setDeclineShow(true)
-    }
-    const handleClose = () => {
-        setApproveShow(false)
-        setDeclineShow(false)
-    }
     const requestOptions = {
         headers: {
             "Content-Type": "application/json",
@@ -56,7 +44,8 @@ export default function NotApprovedVideosListPage() {
         },
         method: "PUT",
     }
-    const options = {
+
+    const getPendingVideosRequestOptions = {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -64,29 +53,45 @@ export default function NotApprovedVideosListPage() {
         method: "GET",
     }
 
+    const handleApproveShow = async (uploadedBy, videoLink) => {
+        setStatus(1)
+        setUsername(uploadedBy)
+        setLink(videoLink)
+        setApproveShow(true)
+    }
+    const handleDeclineShow = async (uploadedBy, videoLink) => {
+        setStatus(0)
+        setUsername(uploadedBy)
+        setLink(videoLink)
+        setDeclineShow(true)
+    }
+    const handleClose = () => {
+        setApproveShow(false)
+        setDeclineShow(false)
+    }
+
     const handleApprove = async () => {
         try {
-            await fetch(`http://localhost:5046/api/Users/UpdateUserLevel/${username}`, requestOptions)
-                .then((response) => {
-                    if(response.status === 200){
-                        toast({
-                            title: "Vaizdo įrašas sėkmingai patvirtintas",
-                            status: "success",
-                            duration: 5000,
-                            position:"top-right",
-                            isClosable: true,
-                        })
-                    }
-                    if (response.status === 404) {
-                        toast({
-                            title: "Naudotojas nebeegzistuoja",
-                            status: "error",
-                            duration: 5000,
-                            position:"top-right",
-                            isClosable: true,
-                        })
-                    }
+            const response = await fetch(`http://localhost:5046/api/Users/UpdateUserLevel/${username}`, requestOptions)
+            const data = await response.json()
+            if (response.status === 200) {
+                toast({
+                    title: "Vaizdo įrašas sėkmingai patvirtintas",
+                    status: "success",
+                    duration: 5000,
+                    position:"top-right",
+                    isClosable: true,
                 })
+            }
+            if (response.status === 404) {
+                toast({
+                    title: data.Message,
+                    status: "error",
+                    duration: 5000,
+                    position:"top-right",
+                    isClosable: true,
+                })
+            }
             await changeVideoStatus()
         } catch (error){
             console.log(error.message)
@@ -94,11 +99,29 @@ export default function NotApprovedVideosListPage() {
     }
     const changeVideoStatus = async () => {
         try {
-            await fetch("http://localhost:5046/api/Video/UpdateVideoStatus", updateRequestOptions)
+            await fetch("http://localhost:5046/api/Video/UpdateVideoStatus", updateVideoRequestOptions)
                 .then((response) => {
                     if(response.status === 200){
-                        setApproveShow(false)
-                        window.location.reload(true)
+                        if(Status === 0){
+                            toast({
+                                title: "Vaizdo įrašas sėkmingai atmestas",
+                                status: "success",
+                                duration: 5000,
+                                position:"top-right",
+                                isClosable: true,
+                            })
+                            setDeclineShow(false)
+                        }
+                        if(Status === 1){
+                            toast({
+                                title: "Vaizdo įrašas sėkmingai patvirtintas",
+                                status: "success",
+                                duration: 5000,
+                                position:"top-right",
+                                isClosable: true,
+                            })
+                            setApproveShow(false)
+                        }
                     }
                     if (response.status === 404) {
                         toast({
@@ -116,29 +139,9 @@ export default function NotApprovedVideosListPage() {
             console.log(error.message)
         }
     }
-    const handleDecline = () => {
+    const handleDecline = async () => {
         try {
-            fetch(`http://localhost:5046/api/Users/UpdateUserLevel/${username}`, requestOptions)
-                .then((response) => {
-                    if(response.status === 200){
-                        toast({
-                            title: "Vaizdo įrašas sėkmingai patvirtintas",
-                            status: "success",
-                            duration: 5000,
-                            position:"top-right",
-                            isClosable: true,
-                        })
-                    }
-                    if (response.status === 404) {
-                        toast({
-                            title: response.json().message,
-                            status: "error",
-                            duration: 5000,
-                            position:"top-right",
-                            isClosable: true,
-                        })
-                    }
-                })
+            await changeVideoStatus()
             window.location.reload(true)
         } catch (error){
             console.log(error.message)
@@ -151,15 +154,41 @@ export default function NotApprovedVideosListPage() {
     }
 
     const getVideos = useCallback(async () => {
-        const unapprovedVideosResponse = await fetch("http://localhost:5046/api/Video/GetUnapprovedVideos", options)
-        const unapprovedVideos = await unapprovedVideosResponse.json()
-        setUnapprovedVideos(unapprovedVideos)
+        const pendingVideosResponse = await fetch("http://localhost:5046/api/Video/GetpendingVideos", getPendingVideosRequestOptions)
+        const pendingVideos = await pendingVideosResponse.json()
+        setPendingVideos(pendingVideos)
+    }, [])
+
+    const handleToken = useCallback(() => {
+        if(!token){
+            toast({
+                title: "Turite prisijungti",
+                status: "error",
+                duration: 5000,
+                position:"top-right",
+                isClosable: true,
+            })
+            navigate(`${process.env.PUBLIC_URL}${Paths.Login}`)
+        }
+        else{
+            const { exp } = jwtDecode(token)
+            const expirationTime = (exp * 1000) - 60000
+            if (Date.now() >= expirationTime) {
+                toast({
+                    title: "Baigėsi sesijos galiojimo laikas",
+                    status: "warning",
+                    duration: 5000,
+                    position:"top-right",
+                    isClosable: true,
+                })
+                navigate(Paths.Login)
+                localStorage.clear()
+            }
+        }
     }, [])
 
     useEffect(() => { 
-        if(!token){
-            navigate(`${process.env.PUBLIC_URL}${Paths.Login}`)
-        }
+        handleToken()
         getVideos()
     }, [])
     
@@ -172,17 +201,22 @@ export default function NotApprovedVideosListPage() {
                             <Card.Body>
                                 <TableContainer>
                                     <Table variant="striped" colorScheme="blue">
-                                        <TableCaption><strong>Visi naudotojai</strong></TableCaption>
+                                        <TableCaption><strong>Visi vaizdo įrašai</strong></TableCaption>
                                         <Thead>
                                             <Tr>
+                                                <Th>#</Th>
                                                 <Th>Naudotojo vardas</Th>
                                                 <Th>Nuoroda</Th>
+                                                <Th>Veiksmai</Th>
                                             </Tr>
                                         </Thead>
                                         <Tbody>
-                                            {unapprovedVideos.map((video, index) => {
+                                            {pendingVideos.map((video, index) => {
                                                 return (
                                                     <Tr key={index}>
+                                                        <Td>
+                                                            {index + 1}
+                                                        </Td>
                                                         <Td>
                                                             {video.uploadedBy}
                                                         </Td>
@@ -191,7 +225,7 @@ export default function NotApprovedVideosListPage() {
                                                         </Td>
                                                         <Td>
                                                             <button className="approveButton" onClick={() => handleApproveShow(video.uploadedBy, video.link)} >Patvirtinti</button>
-                                                            <button className="declineButton" onClick={() => handleDeclineShow()} >Atšaukti</button>
+                                                            <button className="declineButton" onClick={() => handleDeclineShow(video.uploadedBy, video.link)} >Atšaukti</button>
                                                         </Td>
                                                     </Tr>
                                                 )

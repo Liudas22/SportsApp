@@ -3,7 +3,6 @@ import { Col, Button, Row, Container, Card, Form } from "react-bootstrap"
 import { useToast } from "@chakra-ui/react"
 import { useNavigate } from "react-router-dom"
 import { Paths } from "../../constants/Paths"
-import jwtDecode from "jwt-decode"
 
 function LoginPage() {
 
@@ -26,11 +25,11 @@ function LoginPage() {
         const token = localStorage.getItem("accessToken")
         if(token){
             navigate(`${process.env.PUBLIC_URL}${Paths.Home}`)
-        }}, [])
+        }
+    }, [])
 
     const submitHandler = async (e) => {
         e.preventDefault()
-
         const requestOptions = {
             headers: {
                 "Content-Type": "application/json",
@@ -53,8 +52,6 @@ function LoginPage() {
                 isClosable: true,
             })
             localStorage.setItem("accessToken", data.accessToken)
-            const userRole = jwtDecode(data.accessToken).role
-            localStorage.setItem("Role", userRole)
             navigate(`${process.env.PUBLIC_URL}${Paths.Home}`)
         }
         if (data.StatusCode === 404) {

@@ -4,15 +4,11 @@ import { useNavigate } from "react-router"
 import { useToast } from "@chakra-ui/react"
 import { Paths } from "../../constants/Paths"
 import { useCallback } from "react"
+import jwtDecode from "jwt-decode"
 
 export default function UploadVideoPage(){
 
     const token = localStorage.getItem("accessToken")
-    useEffect(() => {
-        if(!token){
-            navigate(`${process.env.PUBLIC_URL}${Paths.Login}`)
-        }})
-
     const [uploadedBy, setUploadedBy] = useState("")
     const [link, setLink] = useState("")
     const navigate = useNavigate()
@@ -26,8 +22,7 @@ export default function UploadVideoPage(){
         }
     }
 
-    const getUsers = useCallback(async () => {
-
+    const getUser = useCallback(async () => {
         await fetch("http://localhost:5046/api/Users/Me", getMeOptions)
             .then((response) => {
                 return response.json()
@@ -35,11 +30,37 @@ export default function UploadVideoPage(){
             .then((data) => setUploadedBy(data.name))
     }, [])
 
-    useEffect(() => { 
+    const handleToken = useCallback(() => {
         if(!token){
+            toast({
+                title: "Turite prisijungti",
+                status: "error",
+                duration: 5000,
+                position:"top-right",
+                isClosable: true,
+            })
             navigate(`${process.env.PUBLIC_URL}${Paths.Login}`)
         }
-        getUsers()
+        else{
+            const { exp } = jwtDecode(token)
+            const expirationTime = (exp * 1000) - 60000
+            if (Date.now() >= expirationTime) {
+                toast({
+                    title: "Baigėsi sesijos galiojimo laikas",
+                    status: "warning",
+                    duration: 5000,
+                    position:"top-right",
+                    isClosable: true,
+                })
+                navigate(Paths.Login)
+                localStorage.clear()
+            }
+        }
+    }, [])
+
+    useEffect(() => { 
+        handleToken()
+        getUser()
     }, [])
 
     const submitHandler = async (e) => {

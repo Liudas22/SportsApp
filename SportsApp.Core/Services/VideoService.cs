@@ -2,11 +2,7 @@
 using SportsApp.Core.Interfaces;
 using SportsApp.Domain.Entities;
 using SportsApp.Domain.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SportsApp.Domain.Enums;
 
 namespace SportsApp.Core.Services
 {
@@ -29,7 +25,7 @@ namespace SportsApp.Core.Services
                 Id = Guid.NewGuid(),
                 UploadedBy = command.UploadedBy,
                 Link = command.Link,
-                IsApproved = false
+                Status = VideoStatus.Pending
             };
 
             await _videoRepository.AddVideo(video);

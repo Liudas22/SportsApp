@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text.Encodings.Web;
 using System.Web;
+using SportsApp.Domain.Enums;
 
 namespace SportsApp.Infrastructure.Repositories
 {
@@ -31,14 +32,7 @@ namespace SportsApp.Infrastructure.Repositories
         }
         public async Task<Video> GetByLinkAsync(string link)
         {
-            Console.WriteLine(HttpUtility.UrlDecode(link));
-            string decodedLink = HttpUtility.UrlDecode(link);
-            foreach (Video viddd in _dbContext.Videos)
-            {
-                Console.WriteLine(viddd.Link);
-                Console.WriteLine(decodedLink == viddd.Link);
-            }
-            var video = await _dbContext.Videos.FirstOrDefaultAsync(u => u.Link == decodedLink);
+            var video = await _dbContext.Videos.FirstOrDefaultAsync(u => u.Link == link);
 
             return video;
         }
@@ -54,22 +48,33 @@ namespace SportsApp.Infrastructure.Repositories
 
             return videos;
         }
-        public async Task<IEnumerable<Video>> GetUnapprovedVideosAsync()
+        public async Task<IEnumerable<Video>> GetPendingVideosAsync()
         {
             var videos = await _dbContext.Videos.ToListAsync();
             List<Video> filteredByStatus = new List<Video>();
             foreach(Video video in videos)
             {
-                if(video.IsApproved == false) filteredByStatus.Add(video);
+                if(video.Status == VideoStatus.Pending) filteredByStatus.Add(video);
             }
             return filteredByStatus;
         }
-        public async Task<Video> UpdateStatusAsync(Video videoToChange, bool status)
+        public async Task<Video> UpdateStatusAsync(Video videoToChange, VideoStatus status)
         {
-            videoToChange.IsApproved = status;
+            videoToChange.Status = status;
             _dbContext.Videos.Update(videoToChange);
             await _dbContext.SaveChangesAsync();
             return videoToChange;
+        }
+
+        public async Task<IEnumerable<Video>> GetMyVideos(string username)
+        {
+            var videos = await _dbContext.Videos.ToListAsync();
+            List<Video> filteredByName = new List<Video>();
+            foreach (Video video in videos)
+            {
+                if (video.UploadedBy == username) filteredByName.Add(video);
+            }
+            return filteredByName;
         }
     }
 }

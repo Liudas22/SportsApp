@@ -2,8 +2,6 @@ import { useState, React } from "react"
 import { Col, Button, Row, Container, Card, Form } from "react-bootstrap"
 import { Checkbox, useToast } from "@chakra-ui/react"
 import { useNavigate } from "react-router"
-import { useEffect } from "react"
-import { Paths } from "../../constants/Paths"
 
 export default function RegisterPage() {
 
@@ -34,12 +32,6 @@ export default function RegisterPage() {
 
     const toast = useToast()
     const navigate = useNavigate()
-
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken")
-        if(token){
-            navigate(`${process.env.PUBLIC_URL}${Paths.Home}`)
-        }})
 
     const submitHandler = async (e) => {
         e.preventDefault()

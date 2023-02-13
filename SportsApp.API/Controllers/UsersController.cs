@@ -92,9 +92,9 @@ namespace SportsApp.Controllers
         [HttpPut("{username}")]
         public async Task<ActionResult> UpdateUserLevel(string username)
         {
-            await _userService.UpdateUserLevelAsync(username);
+            var user = await _userService.UpdateUserLevelAsync(username);
 
-            return Ok();
+            return Ok(user);
         }
         private Guid UserId
         {

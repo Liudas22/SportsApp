@@ -26,7 +26,8 @@
     "react-validation": "^3.0.7",
     "styled-components": "^5.3.6",
     "validator": "^13.7.0",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webpack-dev-middleware": "^6.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

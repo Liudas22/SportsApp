@@ -4,25 +4,55 @@ import LevelsData from "../..//Data/LevelsData.json"
 import { 
     Text,
     Button,
-    Divider
+    Divider,
+    useToast
 } from "@chakra-ui/react"
 import { useNavigate } from "react-router-dom"
 import { Paths } from "../../constants/Paths"
 import { Container, Card, Image } from "react-bootstrap"
+import { useCallback } from "react"
+import jwtDecode from "jwt-decode"
 
 export default function LevelsListPage(){
-
+    
+    const token = localStorage.getItem("accessToken")
     const navigate = useNavigate()
+    const toast = useToast()
 
     const onClickHandler = () => {
         navigate(Paths.UploadVideo)
     }
 
-    useEffect(() => {
-        const token = localStorage.getItem("accessToken")
+    const handleToken = useCallback(() => {
         if(!token){
-            navigate(`${process.env.REACT_APP_API_URL}${Paths.Login}`)
+            toast({
+                title: "Turite prisijungti",
+                status: "error",
+                duration: 5000,
+                position:"top-right",
+                isClosable: true,
+            })
+            navigate(`${process.env.PUBLIC_URL}${Paths.Login}`)
         }
+        else{
+            const { exp } = jwtDecode(token)
+            const expirationTime = (exp * 1000) - 60000
+            if (Date.now() >= expirationTime) {
+                toast({
+                    title: "Baigėsi sesijos galiojimo laikas",
+                    status: "warning",
+                    duration: 5000,
+                    position:"top-right",
+                    isClosable: true,
+                })
+                navigate(Paths.Login)
+                localStorage.clear()
+            }
+        }
+    }, [])
+
+    useEffect(() => {
+        handleToken()
     })
 
     return(

@@ -54,9 +54,9 @@ namespace SportsApp.API.Controllers
         }
         [HttpGet]
         [AuthorizeRole(UserRole.Coach)]
-        public async Task<ActionResult<IEnumerable<VideoDTO>>> GetUnapprovedVideos()
+        public async Task<ActionResult<IEnumerable<VideoDTO>>> GetPendingVideos()
         {
-            var videos = await _videoRepository.GetUnapprovedVideosAsync();
+            var videos = await _videoRepository.GetPendingVideosAsync();
 
             var videosDto = videos.Select(video => _mapper.Map<VideoDTO>(video));
 
@@ -68,6 +68,15 @@ namespace SportsApp.API.Controllers
             var video = await _videoService.UpdateVideoStatusAsync(command);
 
             return Ok(video);
+        }
+        [HttpGet("{username}")]
+        public async Task<ActionResult<IEnumerable<VideoDTO>>> GetMyVideos(string username)
+        {
+            var videos = await _videoRepository.GetMyVideos(username);
+
+            var videosDto = videos.Select(video => _mapper.Map<VideoDTO>(video));
+
+            return Ok(videosDto);
         }
     }
 }

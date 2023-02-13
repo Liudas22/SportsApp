@@ -9,9 +9,10 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import { ChakraProvider } from "@chakra-ui/react"
 import { NavigationBar } from "./components/NavigationBar/NavigationBar"
 import UploadVideoPage from "./pages/UploadVideo/UploadVideoPage"
-import NotApprovedVideosListPage from "./pages/NotApprovedVideosList/NotApprovedVideosListPage"
+import PendingVideosListPage from "./pages/PendingVideosListPage/PendingVideosListPage"
 import UserPage from "./pages/User/UserPage"
 import AllUsersPage from "./pages/AllUsers/AllUsersPage"
+import UserVideosPage from "./pages/UserVideos/UserVideosPage"
 
 function App() {
     return (
@@ -24,9 +25,10 @@ function App() {
                     <Route path="/register" element={ <RegisterPage /> } />
                     <Route path="/levels" element={ <LevelsListPage /> } />
                     <Route path="/levels/uploadVideo" element={ <UploadVideoPage /> } />
-                    <Route path="/UnapprovedVideos" element={ <NotApprovedVideosListPage /> } />
+                    <Route path="/PendingVideos" element={ <PendingVideosListPage /> } />
                     <Route path="/user" element={ <UserPage /> } />
                     <Route path="/users" element={ <AllUsersPage /> } />
+                    <Route path="/videos" element={ <UserVideosPage /> } />
                 </Routes>
             </div>
         </ChakraProvider>
