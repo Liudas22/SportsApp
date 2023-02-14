@@ -73,7 +73,6 @@ export default function PendingVideosListPage() {
     const handleApprove = async () => {
         try {
             const response = await fetch(`http://localhost:5046/api/Users/UpdateUserLevel/${username}`, requestOptions)
-            const data = await response.json()
             if (response.status === 200) {
                 toast({
                     title: "Vaizdo įrašas sėkmingai patvirtintas",
@@ -82,17 +81,17 @@ export default function PendingVideosListPage() {
                     position:"top-right",
                     isClosable: true,
                 })
+                await changeVideoStatus()
             }
             if (response.status === 404) {
                 toast({
-                    title: data.Message,
+                    title: "Nerastas naudotojas",
                     status: "error",
                     duration: 5000,
                     position:"top-right",
                     isClosable: true,
                 })
             }
-            await changeVideoStatus()
         } catch (error){
             console.log(error.message)
         }
@@ -142,7 +141,6 @@ export default function PendingVideosListPage() {
     const handleDecline = async () => {
         try {
             await changeVideoStatus()
-            window.location.reload(true)
         } catch (error){
             console.log(error.message)
         }
@@ -154,7 +152,7 @@ export default function PendingVideosListPage() {
     }
 
     const getVideos = useCallback(async () => {
-        const pendingVideosResponse = await fetch("http://localhost:5046/api/Video/GetpendingVideos", getPendingVideosRequestOptions)
+        const pendingVideosResponse = await fetch("http://localhost:5046/api/Video/GetPendingVideos", getPendingVideosRequestOptions)
         const pendingVideos = await pendingVideosResponse.json()
         setPendingVideos(pendingVideos)
     }, [])

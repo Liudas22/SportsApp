@@ -11,21 +11,12 @@ import { useEffect } from "react"
 export default function UserVideosPage(){
 
     const token = localStorage.getItem("accessToken")
-    const [username, setUsername] = useState("")
     const [usersVideos, setUsersVideos] = useState([])
     const navigate = useNavigate()
     const toast = useToast()
 
     const openInNewTab = (url) => {
         window.open(url, "_blank", "noreferrer")
-    }
-
-    const getMeOptions = {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token
-        }
     }
 
     const getUsersVideosRequestOptions = {
@@ -36,43 +27,16 @@ export default function UserVideosPage(){
         method: "GET",
     }
 
-    const getUser = useCallback(async () => {
-        try {
-            await fetch("http://localhost:5046/api/Users/Me", getMeOptions)
-                .then((response) => {
-                    return response.json()
-                })
-                .then((data) => setUsername(data.name))
-        } catch (error){
-            console.log(error.message)
+    const getUserVideos = useCallback(async () => {
+        try{
+            const username = jwtDecode(token).unique_name
+            const usersVideosResponse = await fetch(`http://localhost:5046/api/Video/GetMyVideos/${username}`, getUsersVideosRequestOptions)
+            const usersUploadedVideos = await usersVideosResponse.json()
+            setUsersVideos(usersUploadedVideos)
+        } catch {
+            (error) => console.log(error)
         }
-        
-    })
-
-    const getUserVideos = async () => {
-        console.log("USERNAME: " + username)
-        const usersVideosResponse = await fetch(`http://localhost:5046/api/Video/GetMyVideos/${username}`, getUsersVideosRequestOptions)
-        if(usersVideosResponse.status === 200 ){
-            toast({
-                title: "Viskas gud",
-                status: "success",
-                duration: 5000,
-                position:"top-right",
-                isClosable: true,
-            })
-        }
-        if(usersVideosResponse.status === 404 ){
-            toast({
-                title: "Useris nerastas",
-                status: "error",
-                duration: 5000,
-                position:"top-right",
-                isClosable: true,
-            })
-        }
-        const usersUploadedVideos = await usersVideosResponse.json()
-        setUsersVideos(usersUploadedVideos)
-    }
+    }, [])
 
     const handleToken = useCallback(() => {
         if(!token){
@@ -102,9 +66,8 @@ export default function UserVideosPage(){
         }
     }, [])
 
-    useEffect(() => { 
+    useEffect(() => {
         handleToken()
-        getUser()
         getUserVideos()
     }, [])
 
@@ -117,11 +80,10 @@ export default function UserVideosPage(){
                             <Card.Body>
                                 <TableContainer>
                                     <Table variant="striped" colorScheme="blue">
-                                        <TableCaption><strong>Visi naudotojai</strong></TableCaption>
+                                        <TableCaption><strong>Mano vaizdo įrašai</strong></TableCaption>
                                         <Thead>
                                             <Tr>
                                                 <Th>#</Th>
-                                                <Th>Naudotojo vardas</Th>
                                                 <Th>Nuoroda</Th>
                                                 <Th>Būsena</Th>
                                             </Tr>
@@ -134,14 +96,12 @@ export default function UserVideosPage(){
                                                             {index + 1}
                                                         </Td>
                                                         <Td>
-                                                            {video.uploadedBy}
+                                                            {video.status === 0 ? "Atmestas" : ((video.status === 1) ? "Patvirtintas" : "Laukia patvirtinimo" )}
                                                         </Td>
                                                         <Td>
                                                             <button className="previewButton" onClick={() => openInNewTab(video.link)}>Peržiūrėti vaizdo įrašą</button>
                                                         </Td>
-                                                        <Td>
-                                                            {video.status === 0 ? "Atmestas" : ((video.status === 1) ? "Patvirtintas" : "Laukia patvirtinimo" )}
-                                                        </Td>
+                                                        
                                                     </Tr>
                                                 )
                                             })}

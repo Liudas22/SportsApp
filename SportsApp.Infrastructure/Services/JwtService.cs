@@ -41,6 +41,7 @@ namespace SportsApp.Infrastructure.Services
             new(ClaimTypes.Sid, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(ClaimTypes.Role, user.Role.ToString()),
+            new(ClaimTypes.Name, user.Name),
         };
 
             var tokenDescriptor = new SecurityTokenDescriptor
