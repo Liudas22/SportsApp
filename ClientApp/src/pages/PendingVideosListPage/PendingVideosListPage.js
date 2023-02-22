@@ -17,7 +17,7 @@ export default function PendingVideosListPage() {
     const [approveShow, setApproveShow] = useState(false)
     const [declineShow, setDeclineShow] = useState(false)
     const [Status, setStatus] = useState(0)
-    const [username, setUsername] = useState("")
+    const [uploadedBy, setUploadedBy] = useState("")
     const [Link, setLink] = useState("")
     const toast = useToast()
 
@@ -31,6 +31,7 @@ export default function PendingVideosListPage() {
             Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
+            uploadedBy,
             Link,
             Status,
         }),
@@ -55,13 +56,13 @@ export default function PendingVideosListPage() {
 
     const handleApproveShow = async (uploadedBy, videoLink) => {
         setStatus(1)
-        setUsername(uploadedBy)
+        setUploadedBy(uploadedBy)
         setLink(videoLink)
         setApproveShow(true)
     }
     const handleDeclineShow = async (uploadedBy, videoLink) => {
         setStatus(0)
-        setUsername(uploadedBy)
+        setUploadedBy(uploadedBy)
         setLink(videoLink)
         setDeclineShow(true)
     }
@@ -72,7 +73,7 @@ export default function PendingVideosListPage() {
 
     const handleApprove = async () => {
         try {
-            const response = await fetch(`http://localhost:5046/api/Users/UpdateUserLevel/${username}`, requestOptions)
+            const response = await fetch(`http://localhost:5046/api/Users/UpdateUserLevel/${uploadedBy}`, requestOptions)
             if (response.status === 200) {
                 toast({
                     title: "Vaizdo įrašas sėkmingai patvirtintas",

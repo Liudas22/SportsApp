@@ -9,6 +9,7 @@ namespace SportsApp.Core.Commands
 {
     public class UpdateVideoStatusCommand
     {
+        public string UploadedBy { get; set; }
         public string Link { get; set; }
         public VideoStatus Status { get; set; }
     }

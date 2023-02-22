@@ -12,7 +12,7 @@ namespace SportsApp.Core.Interfaces
 {
     public interface IVideoRepository
     {
-        Task<Video> GetByLinkAndNameAsync(UploadVideoCommand command);
+        Task<Video> GetByLinkAndNameAsync(string name, string link);
         Task<Video> AddVideo(Video newVideo);
         Task<IEnumerable<Video>> GetAllAsync();
         Task<IEnumerable<Video>> GetPendingVideosAsync();

@@ -16,7 +16,7 @@ namespace SportsApp.Core.Services
         }
         public async Task<Video?> UploadVideoAsync(UploadVideoCommand command)
         {
-            if(await _videoRepository.GetByLinkAndNameAsync(command) != null)
+            if(await _videoRepository.GetByLinkAndNameAsync(command.UploadedBy, command.Link) != null)
             {
                 throw new ConflictException("Vaizdo įrašas su tokia nuoroda jau egzistuoja");
             }
@@ -34,7 +34,7 @@ namespace SportsApp.Core.Services
         }
         public async Task<Video?> UpdateVideoStatusAsync(UpdateVideoStatusCommand command)
         {
-            var video = await _videoRepository.GetByLinkAsync(command.Link);
+            var video = await _videoRepository.GetByLinkAndNameAsync(command.UploadedBy, command.Link);
 
             if (video == null)
             {

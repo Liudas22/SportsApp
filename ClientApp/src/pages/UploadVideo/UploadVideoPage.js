@@ -14,6 +14,16 @@ export default function UploadVideoPage(){
     const navigate = useNavigate()
     const toast = useToast()
 
+    const validateYouTubeUrl = (urlToParse) => {
+        if (urlToParse) {
+            var regExp = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/
+            if (urlToParse.match(regExp)) {
+                return true
+            }
+        }
+        return false
+    }
+
     const getMeOptions = {
         method: "GET",
         headers: {
@@ -64,37 +74,49 @@ export default function UploadVideoPage(){
     }, [])
 
     const submitHandler = async (e) => {
-        e.preventDefault()
-        const requestOptions = {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({
-                uploadedBy,
-                link
-            }),
-        }
-        const response = await fetch("http://localhost:5046/api/Video/UploadVideo", requestOptions)
-        const data = await response.json()
-        if (response.status === 200) {
+        const validation = validateYouTubeUrl(link)
+        if (validation === false){
             toast({
-                title: "Vaizdo įrašas įkeltas sėkmingai",
-                status: "success",
-                duration: 5000,
-                position:"top-right",
-                isClosable: true,
-            })
-            navigate(Paths.Home)
-        }
-        if (response.status === 409) {
-            toast({
-                title: data.Message,
+                title: "Vaizdo įrašo nuoroda nėra Youtube tipo.",
                 status: "error",
                 duration: 5000,
                 position:"top-right",
                 isClosable: true,
             })
+        }
+        else{
+            e.preventDefault()
+            const requestOptions = {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                body: JSON.stringify({
+                    uploadedBy,
+                    link
+                }),
+            }
+            const response = await fetch("http://localhost:5046/api/Video/UploadVideo", requestOptions)
+            const data = await response.json()
+            if (response.status === 200) {
+                toast({
+                    title: "Vaizdo įrašas įkeltas sėkmingai",
+                    status: "success",
+                    duration: 5000,
+                    position:"top-right",
+                    isClosable: true,
+                })
+                navigate(Paths.Home)
+            }
+            if (response.status === 409) {
+                toast({
+                    title: data.Message,
+                    status: "error",
+                    duration: 5000,
+                    position:"top-right",
+                    isClosable: true,
+                })
+            }
         }
     }
     return(

@@ -1,21 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SportsApp.Core.Commands;
 using SportsApp.Core.DTO;
 using SportsApp.Core.Interfaces;
-using SportsApp.Domain.Models;
 using SportsApp.Domain.Models.DTO;
-using SportsApp.Infrastructure.Data;
-using SportsApp.Infrastructure.Repositories;
-using SportsApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using SportsApp.Domain.Entities;
 using System.Security.Claims;
 using SportsApp.Domain.Enums;
 using SportsApp.API.Attributes;
-using SportsApp.Core.Services;
+using SportsApp.Domain.Entities;
 
 namespace SportsApp.Controllers
 {
@@ -89,10 +83,10 @@ namespace SportsApp.Controllers
 
             return Ok();
         }
-        [HttpPut("{username}")]
-        public async Task<ActionResult> UpdateUserLevel(string username)
+        [HttpPut("{uploadedBy}")]
+        public async Task<ActionResult> UpdateUserLevel(string uploadedBy)
         {
-            var user = await _userService.UpdateUserLevelAsync(username);
+            var user = await _userService.UpdateUserLevelAsync(uploadedBy);
 
             return Ok(user);
         }

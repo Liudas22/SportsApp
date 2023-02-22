@@ -36,9 +36,9 @@ namespace SportsApp.Infrastructure.Repositories
 
             return video;
         }
-        public async Task<Video> GetByLinkAndNameAsync(UploadVideoCommand command)
+        public async Task<Video> GetByLinkAndNameAsync(string name, string link)
         {
-            var video = await _dbContext.Videos.FirstOrDefaultAsync(u => u.Link == command.Link && u.UploadedBy == command.UploadedBy);
+            var video = await _dbContext.Videos.FirstOrDefaultAsync(u => u.UploadedBy == name && u.Link == link);
 
             return video;
         }
