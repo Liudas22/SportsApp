@@ -1,5 +1,6 @@
+import { Avatar } from "@chakra-ui/react"
 import jwtDecode from "jwt-decode"
-import React from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import { NavDropdown } from "react-bootstrap"
 import Container from "react-bootstrap/Container"
 import Nav from "react-bootstrap/Nav"
@@ -9,15 +10,35 @@ import { Paths } from "../../constants/Paths"
 
 function NavigationBar() {
     const navigate = useNavigate()
-
+    // const [avatar, setAvatar] = useState("")
+    const [userData, setUserData] = useState([])
     const token = localStorage.getItem("accessToken")
     let isAdmin = false
     let isCoach = false
+
     if(token){
         const role = jwtDecode(token).role
         isAdmin = (role === "Admin")
         isCoach = (role === "Coach")
     }
+
+    const getMeOptions = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+        }
+    }
+
+    const getUser = useCallback(async () => {
+        const response = await fetch("http://localhost:5046/api/Users/Me", getMeOptions)
+        const user = await response.json()
+        setUserData(user)
+    }, [])
+
+    useEffect(() => {
+        getUser()
+    }, [])
 
     const Logout = (e) => {
         e.preventDefault()
@@ -75,7 +96,8 @@ function NavigationBar() {
                                     )}
                                 </>
                             )}
-                            <Nav className="me-right">              
+                            <Nav className="me-right">
+                                <Avatar size="sm" mt={1} src = {userData.avatar ? "data:image/jpeg;base64," + userData.avatar : null} />
                                 <NavDropdown title={<i className="bi bi-file-earmark-person"></i>} id="basic-nav-dropdown" >
                                     <NavDropdown.Item onClick={() => navigate(Paths.User)}>Profilis</NavDropdown.Item>
                                     <NavDropdown.Item onClick={(e) => Logout(e)}>Atsijungti</NavDropdown.Item>

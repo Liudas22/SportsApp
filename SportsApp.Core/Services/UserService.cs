@@ -1,4 +1,6 @@
 ﻿using Microsoft.Win32;
+using SportsApp.Core.Commands;
+using SportsApp.Core.DTO;
 using SportsApp.Core.Interfaces;
 using SportsApp.Domain.Entities;
 using SportsApp.Domain.Exceptions;
@@ -37,7 +39,35 @@ namespace SportsApp.Core.Services
             {
                 throw new NotFoundException("Naudotojas nerastas");
             }
-            await _userRepository.UpdateLevelAsync(user);
+            user.Level++;
+            await _userRepository.UpdateUserProfileAsync(user);
+
+            return user;
+        }
+
+        public async Task<User> UpdateUserProfileAsync(UpdateFullProfileCommand command, Guid id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+            {
+                throw new NotFoundException("Naudotojas nerastas");
+            }
+            user.Avatar = command.Avatar;
+            user.Name   = command.Username;
+            user.Email  = command.Email;
+            await _userRepository.UpdateUserProfileAsync(user);
+
+            return user;
+        }
+        public async Task<User> UpdateUserAvatarAsync(UpdateAvatarCommand command)
+        {
+            var user = await _userRepository.GetByNameOrDefaultAsync(command.Username);
+            if (user == null)
+            {
+                throw new NotFoundException("Naudotojas nerastas");
+            }
+            user.Avatar = command.Avatar;
+            await _userRepository.UpdateUserProfileAsync(user);
 
             return user;
         }

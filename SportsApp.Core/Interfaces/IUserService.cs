@@ -1,4 +1,5 @@
 ﻿using SportsApp.Core.Commands;
+using SportsApp.Core.DTO;
 using SportsApp.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,7 @@ namespace SportsApp.Core.Interfaces
     {
         Task<User?> DeleteAsync(string email);
         Task<User?> UpdateUserLevelAsync(string username);
+        Task<User?> UpdateUserProfileAsync(UpdateFullProfileCommand command, Guid id);
+        Task<User> UpdateUserAvatarAsync(UpdateAvatarCommand command);
     }
 }

@@ -8,6 +8,7 @@ import {
     Text,
     useColorModeValue,
     useToast,
+    Button,
 } from "@chakra-ui/react"
 import { useCallback } from "react"
 import { useNavigate } from "react-router"
@@ -22,6 +23,8 @@ export default function UserPage(){
     const toast = useToast()
     const navigate = useNavigate()
     const [userData, setUserData] = useState([])
+    const [avatar, setAvatar] = useState("")
+    const [username, setUsername] = useState()
 
     const getMeOptions = {
         method: "GET",
@@ -31,12 +34,81 @@ export default function UserPage(){
         }
     }
 
-    const getUser = useCallback(async () => {
-        await fetch("http://localhost:5046/api/Users/Me", getMeOptions)
-            .then((response) => {
-                return response.json()
+    const onAvatarChange = async (e) => {
+        if(e.target.files){
+            const file = e.target.files[0]
+            const encodedFile = new Promise((resolve, reject) => {
+                const reader = new FileReader()
+                reader.onload = (event) => {
+                    if (event.target) {
+                        resolve(event.target.result)
+                    }
+                }
+                reader.onerror = (err) => {
+                    reject(err)
+                }
+                reader.readAsDataURL(file)
             })
-            .then((data) => setUserData(data))
+            const temp = (await encodedFile)
+            setAvatar(temp.split(",")[1])
+        }
+    }
+
+    const updateAvatarOptions = {
+        headers: { 
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            username,
+            avatar
+        }),
+        method: "PUT"
+    }
+
+    const SaveChanges = async () => {
+        try {
+            await fetch("http://localhost:5046/api/Users/UpdateUserAvatar", updateAvatarOptions)
+                .then((response) => {
+                    if(response.status === 200){
+                        toast({
+                            title: "Pakeitimai sėkmingai išsaugoti",
+                            status: "success",
+                            duration: 5000,
+                            position:"top-right",
+                            isClosable: true,
+                        })
+                    }
+                    if (response.status === 404) {
+                        toast({
+                            title: response.json().Message,
+                            status: "error",
+                            duration: 5000,
+                            position:"top-right",
+                            isClosable: true,
+                        })
+                    }
+                    if (response.status === 500) {
+                        toast({
+                            title: response.json().Message,
+                            status: "error",
+                            duration: 5000,
+                            position:"top-right",
+                            isClosable: true,
+                        })
+                    }
+                })
+        } catch (error){
+            console.log(error.message)
+        }
+    }
+
+    const getUser = useCallback(async () => {
+        const response = await fetch("http://localhost:5046/api/Users/Me", getMeOptions)
+        const user = await response.json()
+        setUserData(user)
+        setAvatar(user.avatar)
+        setUsername(user.name)
     }, [])
 
     const handleToken = useCallback(() => {
@@ -67,7 +139,7 @@ export default function UserPage(){
         }
     }, [])
 
-    useEffect(() => { 
+    useEffect(() => {
         handleToken()
         getUser()
     }, [])
@@ -96,9 +168,7 @@ export default function UserPage(){
                         textAlign={"center"}>
                         <Avatar
                             size={"2xl"}
-                            src={
-                                "https://creazilla-store.fra1.digitaloceanspaces.com/cliparts/70198/cartoon-sportsman-clipart-xl.png"
-                            }
+                            src = {avatar ? "data:image/jpeg;base64," + avatar : null}
                             alt={"Avatar Alt"}
                             mb={4}
                             pos={"relative"}
@@ -113,6 +183,7 @@ export default function UserPage(){
                                 right: 3,
                             }}
                         />
+                        <input type="file" onChange={(event) => onAvatarChange(event)} />
                         <Heading fontSize={"2xl"} fontFamily={"body"}>
                             {userData.name}
                         </Heading>
@@ -138,6 +209,11 @@ export default function UserPage(){
                                 ))}
                             </div>
                             <MdChevronRight className="opacity-50 cursor-pointer hover:opacity-100" onClick={slideRight} size={40} />
+                        </div>
+                        <div className="relative flex items-center" >
+                            <Button mt={2} width="450px" onClick={() => SaveChanges()}>
+                                Išsaugoti profilio pakeitimus
+                            </Button>
                         </div>
                     </Box>
                 </Center>

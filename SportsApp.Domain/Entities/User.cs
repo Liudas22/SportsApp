@@ -11,6 +11,6 @@ namespace SportsApp.Domain.Entities
         public byte[] PasswordSalt { get; set; }
         public UserRole Role { get; set; }
         public int Level { get; set; }
-        public string ImageName { get; set; }
+        public byte[] Avatar { get; set; }
     }
 }

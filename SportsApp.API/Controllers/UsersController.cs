@@ -10,6 +10,7 @@ using System.Security.Claims;
 using SportsApp.Domain.Enums;
 using SportsApp.API.Attributes;
 using SportsApp.Domain.Entities;
+using SportsApp.Domain.Exceptions;
 
 namespace SportsApp.Controllers
 {
@@ -87,6 +88,29 @@ namespace SportsApp.Controllers
         public async Task<ActionResult> UpdateUserLevel(string uploadedBy)
         {
             var user = await _userService.UpdateUserLevelAsync(uploadedBy);
+
+            return Ok(user);
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetUserAvatar()
+        {
+            var user = _userRepository.GetByIdAsync(UserId);
+            if (user == null) throw new NotFoundException("Naudotojas nerastas");
+
+            var userDto = _mapper.Map<UserAvatarDto>(user);
+            return Ok(userDto);
+        }
+        [HttpPut]
+        public async Task<ActionResult> UpdateUserProfile(UpdateFullProfileCommand command)
+        {
+            var user = await _userService.UpdateUserProfileAsync(command, UserId);
+
+            return Ok(user);
+        }
+        [HttpPut]
+        public async Task<ActionResult> UpdateUserAvatar(UpdateAvatarCommand command)
+        {
+            var user = await _userService.UpdateUserAvatarAsync(command);
 
             return Ok(user);
         }
