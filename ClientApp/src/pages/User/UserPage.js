@@ -16,6 +16,7 @@ import { Paths } from "../../constants/Paths"
 import jwtDecode from "jwt-decode"
 import MockData from "../..//Data/MockData.json"
 import { MdChevronLeft, MdChevronRight } from "react-icons/md"
+import "./UserPage.css"
 
 export default function UserPage(){
 
@@ -156,7 +157,7 @@ export default function UserPage(){
 
     return (
         <>
-            <div className="vh-100">
+            <div className="Avatar">
                 <Center py="100px">
                     <Box
                         maxW={"full"}
@@ -166,33 +167,40 @@ export default function UserPage(){
                         rounded={"lg"}
                         p={6}
                         textAlign={"center"}>
-                        <Avatar
-                            size={"2xl"}
-                            src = {avatar ? "data:image/jpeg;base64," + avatar : null}
-                            alt={"Avatar Alt"}
-                            mb={4}
-                            pos={"relative"}
-                            _after={{
-                                w: 4,
-                                h: 4,
-                                bg: "green.300",
-                                border: "2px solid white",
-                                rounded: "full",
-                                pos: "absolute",
-                                bottom: 0,
-                                right: 3,
-                            }}
-                        />
-                        <input type="file" onChange={(event) => onAvatarChange(event)} />
-                        <Heading fontSize={"2xl"} fontFamily={"body"}>
-                            {userData.name}
+                        <div>
+                            <Avatar
+                                size={"2xl"}
+                                src = {avatar ? "data:image/jpeg;base64," + avatar : null}
+                                alt={"Avatar Alt"}
+                                mb={4}
+                                pos={"relative"}
+                                _after={{
+                                    w: 4,
+                                    h: 4,
+                                    bg: "green.300",
+                                    border: "2px solid white",
+                                    rounded: "full",
+                                    pos: "absolute",
+                                    bottom: 0,
+                                    right: 3,
+                                }}
+                            />
+                            <input className="Input" type="file" onChange={(event) => onAvatarChange(event)} />
+                        </div>
+                        <div className="UserData">
+                            <Heading fontSize={"2xl"} fontFamily={"body"}>
+                                {userData.name}
+                            </Heading>
+                            <Text fontWeight={600} color={"black.500"} mb={4}>
+                                {userData.email}
+                            </Text>
+                            <Text fontWeight={600} color={"black.500"} mb={4}>
+                                Lygis: {userData.level}
+                            </Text>
+                        </div>
+                        <Heading fontSize={"2xl"} fontFamily={"body"} >
+                            Surinkti ženkleliai
                         </Heading>
-                        <Text fontWeight={600} color={"gray.500"} mb={4}>
-                            {userData.email}
-                        </Text>
-                        <Text fontWeight={600} color={"gray.500"} mb={4}>
-                            Lygis: {userData.level}
-                        </Text>
                         <div className="relative flex items-center">
                             <MdChevronLeft className="opacity-50 cursor-pointer hover:opacity-100" onClick={slideLeft} size={40} />
                             <div

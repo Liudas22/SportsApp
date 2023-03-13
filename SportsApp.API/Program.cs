@@ -49,6 +49,10 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<IVideoService, VideoService>();
 builder.Services.AddTransient<IVideoRepository, VideoRepository>();
+builder.Services.AddTransient<ILevelService, LevelService>();
+builder.Services.AddTransient<ILevelRepository, LevelRepository>();
+builder.Services.AddTransient<IBadgeService, BadgeService>();
+builder.Services.AddTransient<IBadgeRepository, BadgeRepository>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var jwtSettings = builder.Services.BuildServiceProvider().GetService<JwtSettings>();

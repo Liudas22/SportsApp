@@ -1,0 +1,12 @@
+.Avatar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.Input{
+    margin-left: 100px;
+}
+.UserData{
+    margin-top: 10px
+}

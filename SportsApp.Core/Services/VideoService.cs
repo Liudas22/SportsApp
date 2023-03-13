@@ -10,7 +10,7 @@ namespace SportsApp.Core.Services
     {
         private readonly IVideoRepository _videoRepository;
 
-        public VideoService(IVideoRepository videoRepository, IHashService hashService)
+        public VideoService(IVideoRepository videoRepository)
         {
             _videoRepository = videoRepository;
         }

@@ -12,16 +12,44 @@ import { Paths } from "../../constants/Paths"
 import { Container, Card, Image } from "react-bootstrap"
 import { useCallback } from "react"
 import jwtDecode from "jwt-decode"
+import { useState } from "react"
 
 export default function LevelsListPage(){
     
     const token = localStorage.getItem("accessToken")
     const navigate = useNavigate()
     const toast = useToast()
+    const [userData, setUserData] = useState([])
 
-    const onClickHandler = () => {
-        navigate(Paths.UploadVideo)
+    const onClickHandler = (level) => {
+        if(userData.level >= level){
+            toast({
+                title: "Šitą lygį jau esate pasiekęs",
+                status: "error",
+                duration: 5000,
+                position:"top-right",
+                isClosable: true,
+            })
+        }
+        else{
+            navigate(Paths.UploadVideo)
+        }
+        
     }
+
+    const getMeOptions = {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+        }
+    }
+
+    const getUser = useCallback(async () => {
+        const response = await fetch("http://localhost:5046/api/Users/Me", getMeOptions)
+        const user = await response.json()
+        setUserData(user)
+    }, [])
 
     const handleToken = useCallback(() => {
         if(!token){
@@ -53,7 +81,8 @@ export default function LevelsListPage(){
 
     useEffect(() => {
         handleToken()
-    })
+        getUser()
+    }, [])
 
     return(
         <>
@@ -83,7 +112,7 @@ export default function LevelsListPage(){
                                                 Pritūpimai: {level.Squats}
                                             </Text>
                                             <Divider mt='5' />
-                                            <Button variant="solid" colorScheme="blue" mt="5" onClick={onClickHandler}>
+                                            <Button variant="solid" colorScheme="blue" mt="5" onClick={() => onClickHandler(level.ID)}>
                                                 Įkelti video
                                             </Button>
                                         </div>

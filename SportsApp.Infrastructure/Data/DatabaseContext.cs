@@ -10,5 +10,7 @@ namespace SportsApp.Infrastructure.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Video> Videos { get; set; }
+        public DbSet<Level> Levels { get; set; }
+        public DbSet<Badge> Badges { get; set; }
     }
 }

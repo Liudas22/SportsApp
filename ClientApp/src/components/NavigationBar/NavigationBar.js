@@ -8,7 +8,7 @@ import Navbar from "react-bootstrap/Navbar"
 import { useNavigate } from "react-router"
 import { Paths } from "../../constants/Paths"
 
-function NavigationBar() {
+export default function NavigationBar() {
     const navigate = useNavigate()
     // const [avatar, setAvatar] = useState("")
     const [userData, setUserData] = useState([])
@@ -97,7 +97,7 @@ function NavigationBar() {
                                 </>
                             )}
                             <Nav className="me-right">
-                                <Avatar size="sm" mt={1} src = {userData.avatar ? "data:image/jpeg;base64," + userData.avatar : null} />
+                                <Avatar size="sm" mt={1} ml={750} src = {userData.avatar ? "data:image/jpeg;base64," + userData.avatar : null} />
                                 <NavDropdown title={<i className="bi bi-file-earmark-person"></i>} id="basic-nav-dropdown" >
                                     <NavDropdown.Item onClick={() => navigate(Paths.User)}>Profilis</NavDropdown.Item>
                                     <NavDropdown.Item onClick={(e) => Logout(e)}>Atsijungti</NavDropdown.Item>
